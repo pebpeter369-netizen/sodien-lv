@@ -1,34 +1,39 @@
 ---
-name: TavaDiena.lv v16 — Exact Color Values
-description: Definitive hex color values from v16 site measured directly
+name: TavaDiena.lv v16 — Exact Color Values (Warm Beige Palette)
+description: Definitive hex color values from v16 site - warm beige/tan accent system
 type: reference
 ---
 
-# V16 Exact Colors
+# V16 Exact Colors — Warm Beige/Tan Palette
 
 **Measured from live v16 site (tavadiena.lv)**
 
 ## Primary Colors
-- **Primary blue**: `#2596be` — used for buttons, links, footer, primary text
-- **Accent gold**: `#d59e2e` — used for "Diena" in logo, hero banner text
-- **Accent light**: `#f5deb3` (wheat/beige) — used for hero banner background
+- **Primary navy**: `#1a365d` — dark navy for headings, text, footer background
+- **Accent tan**: `#f1e1c5` — warm tan for decorative lines and accents
+- **Accent light**: `#faf8f4` — warm beige for hero section backgrounds
 
-## Page Background
-- **Page bg**: `#f8fafc` — light blue-gray, used on most pages
-- **Cards**: `#FFFFFF` (white) — card backgrounds
+## Page Background & Cards
+- **Page bg**: `#f8fafc` — light blue-gray
+- **Cards**: `#FFFFFF` (white)
 - **Text**: `#111827` — dark gray/near-black
 
-## Usage in v16
-- Hero section (under name days heading): Beige background (`#f5deb3`)
-- Logo "Diena" text: Accent gold (`#d59e2e`)
-- Links and buttons: Primary blue (`#2596be`)
+## Usage in v16 Homepage
+- Hero section background: Warm beige (`#faf8f4`)
+- Decorative line behind heading text: Warm tan (`#f1e1c5`)
+- Logo "Diena" text: Accent tan color
 - Page background: Light blue-gray (`#f8fafc`)
+- Cards/panels: White (`#FFFFFF`)
+
+## Accent Color System
+- **Accent**: `#f1e1c5` (warm tan for decorative elements)
+- **Accent light**: `#faf8f4` (warm beige for backgrounds)
+- **Accent dark**: `#e8cfa8` (darker warm tan for hover states)
 
 ## Previous Incorrect Values
-- ❌ Primary was #2563EB (too bright blue)
-- ❌ Primary was #1F40AF (too dark navy)
-- ❌ Accent was #fbbf24 (wrong yellow-gold)
-- ❌ Background was #faf8f3 (warm beige, not cool blue-gray)
+- ❌ Accent was #d59e2e (gold — too bright)
+- ❌ Accent light was #f5deb3 (wheat — wrong tone)
+- ❌ Primary was #2596be (cyan-blue — wrong)
 
 ## Update Date
-Updated 2026-03-29 after user visual comparison with live v16 site.
+Updated 2026-03-29 to warm beige/tan palette matching v16 hero section design.
