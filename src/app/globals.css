@@ -73,6 +73,15 @@ a:hover {
   color: var(--color-primary-dark);
 }
 
+/* Footer links - white by default */
+footer a {
+  color: white;
+}
+
+footer a:hover {
+  color: var(--color-accent);
+}
+
 /* Forms */
 input,
 textarea,
