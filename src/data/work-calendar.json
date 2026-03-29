@@ -1,0 +1,31 @@
+{
+  "2026": {
+    "description": "MK 2025. gada 12. jūnija rīkojums Nr. 330",
+    "transferredDays": [
+      {
+        "freeDay": { "month": 1, "day": 2 },
+        "workDay": { "month": 1, "day": 17 },
+        "reason": "Tilta diena starp Jauno gadu un nedēļas nogali"
+      },
+      {
+        "freeDay": { "month": 6, "day": 22 },
+        "workDay": { "month": 6, "day": 27 },
+        "reason": "Tilta diena pirms Līgo/Jāņiem"
+      }
+    ],
+    "shortenedDays": [
+      { "month": 4, "day": 2, "hours": 7, "reason": "Pirmssvētku diena (Lielā Piektdiena)" },
+      { "month": 4, "day": 30, "hours": 7, "reason": "Pirmssvētku diena (1. maijs)" },
+      { "month": 6, "day": 22, "hours": 7, "reason": "Pirmssvētku diena (Līgo)" },
+      { "month": 11, "day": 17, "hours": 7, "reason": "Pirmssvētku diena (18. novembris)" },
+      { "month": 12, "day": 23, "hours": 7, "reason": "Pirmssvētku diena (Ziemassvētki)" },
+      { "month": 12, "day": 30, "hours": 7, "reason": "Pirmssvētku diena (Jaunais gads)" }
+    ],
+    "officialStats": {
+      "totalWorkDays": 250,
+      "totalWorkHours": 1987,
+      "totalFreeDays": 115,
+      "publicHolidaysOnWorkdays": 12
+    }
+  }
+}

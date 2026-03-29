@@ -1,0 +1,30 @@
+{
+  "lastUpdated": "2026-01-01",
+  "year": 2026,
+  "employeeSocialContribution": 0.105,
+  "employerSocialContribution": 0.2359,
+  "incomeTaxBrackets": [
+    { "upTo": 105300, "rate": 0.255 },
+    { "upTo": 200000, "rate": 0.33 },
+    { "upTo": null, "rate": 0.36 }
+  ],
+  "nonTaxableMinimum": {
+    "maxMonthly": 550,
+    "coefficient": 0.044,
+    "thresholdMonthly": 550,
+    "description": "MIN = max(0, 550 - 0.044 × (bruto_mēnesī - 550))"
+  },
+  "minimumWage": {
+    "monthly": 780,
+    "description": "Minimālā mēneša darba alga — €780"
+  },
+  "dependentRelief": {
+    "monthly": 250,
+    "description": "Atvieglojums par apgādājamo — €250 mēnesī"
+  },
+  "disabilityRelief": {
+    "group1and2": 154,
+    "group3": 120,
+    "description": "Papildu atvieglojumi personām ar invaliditāti"
+  }
+}
