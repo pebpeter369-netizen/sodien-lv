@@ -19,6 +19,9 @@ RUN node -e "const fs=require('fs');const f='node_modules/next/dist/build/genera
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
+# Cache busting for CSS changes (2026-03-29)
+RUN echo "Build timestamp: $(date)"
+
 RUN npm run build
 
 # Rebuild better-sqlite3 for the target platform
