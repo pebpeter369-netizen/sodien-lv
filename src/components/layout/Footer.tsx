@@ -7,18 +7,18 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="font-heading text-xl font-bold mb-4">
+            <h3 className="font-heading text-xl font-bold mb-4 text-white">
               Tava<span className="text-accent">Diena</span>.lv
             </h3>
-            <p className="text-sm leading-relaxed opacity-90">
+            <p className="text-sm leading-relaxed text-white opacity-90">
               Aktuālā informācija Latvijā — vārda dienas, algu kalkulators,
               svētku dienas un aktuālākās ziņas.
             </p>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">Rīki</h4>
-            <ul className="space-y-2 text-sm opacity-90">
+            <h4 className="font-semibold mb-4 text-white">Rīki</h4>
+            <ul className="space-y-2 text-sm text-white opacity-90">
               <li>
                 <Link
                   href="/varda-dienas"
@@ -55,8 +55,8 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">Informācija</h4>
-            <ul className="space-y-2 text-sm opacity-90">
+            <h4 className="font-semibold mb-4 text-white">Informācija</h4>
+            <ul className="space-y-2 text-sm text-white opacity-90">
               <li>
                 <Link
                   href="/par-mums"
@@ -96,7 +96,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 mt-8 pt-8 text-center text-sm opacity-75">
+        <div className="border-t border-white/10 mt-8 pt-8 text-center text-sm text-white opacity-75">
           © {new Date().getFullYear()} TavaDiena.lv. Visas tiesības aizsargātas.
         </div>
       </div>
