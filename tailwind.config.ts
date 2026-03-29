@@ -1,6 +1,8 @@
 import type { Config } from 'tailwindcss';
 
 export default {
+  // Disable dark mode - light-only design
+  darkMode: false,
   theme: {
     extend: {
       colors: {

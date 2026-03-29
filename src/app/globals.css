@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
-/* Light mode only - clean, professional design */
+/*
+ * Light-Only Design System
+ * Dark mode is explicitly disabled (see tailwind.config.ts)
+ * This is a professional, light-themed design with no dark variants
+ */
 :root {
   /* Color System */
   --color-primary: #2563EB;
