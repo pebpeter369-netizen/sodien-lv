@@ -7,6 +7,7 @@ import nameDaysData from "@/data/name-days.json";
 import Image from "next/image";
 import readingTime from "reading-time";
 import { TopicBadge } from "@/components/ui/TopicBadge";
+import { NewsletterSignup } from "@/components/ui/NewsletterSignup";
 import type { ArticleTopic } from "@/types";
 import { timeAgo } from "@/lib/dates";
 
@@ -279,31 +280,7 @@ export default async function Home() {
 
       {/* SECTION 6: Newsletter Signup */}
       <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-8">
-        <div className="bg-white border border-border rounded-xl p-6 sm:p-8 shadow-sm">
-          <h2 className="font-heading text-xl sm:text-2xl font-bold text-text mb-2">
-            Saņem ikdienas apskatu e-pastā
-          </h2>
-          <p className="text-text-secondary text-sm sm:text-base mb-6 leading-relaxed">
-            Vārda dienas, aktualitātes un svētku atgādinājumi — katru rītu tavā e-pastā.
-          </p>
-          <form className="flex flex-col sm:flex-row gap-3">
-            <input
-              type="email"
-              placeholder="Tavs e-pasts"
-              required
-              className="flex-1 px-4 py-3 rounded-lg border border-border text-text placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-            />
-            <button
-              type="submit"
-              className="px-6 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-dark transition-colors shrink-0"
-            >
-              Pierakstīties
-            </button>
-          </form>
-          <p className="text-xs text-text-muted mt-3">
-            Mēs nepostojas nezāļu e-pasta. Vari atrakstīties jebkurā laikā.
-          </p>
-        </div>
+        <NewsletterSignup variant="card" />
       </section>
     </main>
   );
