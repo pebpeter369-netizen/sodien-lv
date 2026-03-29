@@ -1,10 +1,12 @@
 # Build stage
-FROM node:22-alpine AS builder
+FROM node:22-slim AS builder
 
 WORKDIR /app
 
-# Install build tools for native modules
-RUN apk add --no-cache python3 make g++ cairo-dev
+# Install build tools for native modules (debian-based)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY package.json package-lock.json ./
 RUN npm ci
@@ -19,11 +21,11 @@ ENV NODE_ENV=production
 
 RUN npm run build
 
-# Rebuild better-sqlite3 for the Alpine Linux target
+# Rebuild better-sqlite3 for the target platform
 RUN npm rebuild better-sqlite3 --build-from-source
 
 # Production stage
-FROM node:22-alpine AS runner
+FROM node:22-slim AS runner
 
 WORKDIR /app
 
@@ -31,8 +33,7 @@ ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Create non-root user
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 nextjs
+RUN useradd -m -u 1001 nextjs
 
 # Copy built application
 COPY --from=builder /app/public ./public
@@ -46,8 +47,9 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/data ./data-seed
 COPY --from=builder /app/src/data ./src/data
 
-# Create data directory for volume mount
-RUN mkdir -p /app/data && chown -R nextjs:nodejs /app/data /app/data-seed
+# Create data directory and fix permissions
+RUN mkdir -p /app/data /app/.next/cache && \
+    chown -R nextjs:nextjs /app
 
 # Copy entrypoint script
 COPY entrypoint.sh ./entrypoint.sh
