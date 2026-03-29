@@ -3,6 +3,9 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
+# Install build tools for native modules
+RUN apk add --no-cache python3 make g++ cairo-dev
+
 COPY package.json package-lock.json ./
 RUN npm ci
 
@@ -15,6 +18,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
 RUN npm run build
+
+# Rebuild better-sqlite3 for the Alpine Linux target
+RUN npm rebuild better-sqlite3 --build-from-source
 
 # Production stage
 FROM node:22-alpine AS runner
@@ -32,6 +38,9 @@ RUN addgroup --system --gid 1001 nodejs && \
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+
+# Copy node_modules with rebuilt native modules
+COPY --from=builder /app/node_modules ./node_modules
 
 # Copy seed database to a separate location (volume will mount over /app/data)
 COPY --from=builder /app/data ./data-seed
