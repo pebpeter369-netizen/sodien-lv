@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getDb } from "@/lib/db";
-import { articles } from "@/lib/schema";
+import { articles, holidays } from "@/lib/schema";
 import { eq, desc } from "drizzle-orm";
 import { getTodayInLatvia, getLatvianWeekday, getLatvianMonthGenitive } from "@/lib/dates";
 import nameDaysData from "@/data/name-days.json";
@@ -10,6 +10,7 @@ import { TopicBadge } from "@/components/ui/TopicBadge";
 import { NewsletterSignup } from "@/components/ui/NewsletterSignup";
 import type { ArticleTopic } from "@/types";
 import { timeAgo } from "@/lib/dates";
+import { HomepageToolCards } from "@/components/ui/HomepageToolCards";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 300;
@@ -25,12 +26,95 @@ interface HistoricalEvent {
   event: string;
 }
 
+const LATVIAN_MONTHS_SHORT = [
+  "jan.", "feb.", "mar.", "apr.", "mai.", "jūn.",
+  "jūl.", "aug.", "sep.", "okt.", "nov.", "dec.",
+];
+
 // Historical events for "today in history"
 const historicalEvents: HistoricalEvent[] = [
   { year: 1918, event: "Vācu okupācijas iestādes Rīgā oficiāli atļauj veidot Vidzemes, Latgales un Kurzemes apvienoto landesrādu (Zemes padomi). Tas bija solis uz vācu atbalstītas Baltijas hercogistes izveidi, kas konkurēja ar latviešu centieniem pēc neatkarības." },
   { year: 1945, event: "Sākās Otrais Pasaules Karš Eiropā. Šis bija kritisks moments Latvijas vēsturē." },
   { year: 1990, event: "Latvija pieņem deklarāciju par neatkarības atjaunošanu." },
 ];
+
+function getNextHoliday() {
+  const db = getDb();
+  const now = new Date();
+  const year = now.getFullYear();
+
+  const allHolidays = db
+    .select()
+    .from(holidays)
+    .where(eq(holidays.isPublicHoliday, 1))
+    .all();
+
+  let closest: { name: string; slug: string; date: Date; daysUntil: number } | null = null;
+
+  for (const h of allHolidays) {
+    let date: Date | null = null;
+
+    if (h.yearDates) {
+      try {
+        const yearDates = JSON.parse(h.yearDates) as Record<string, string>;
+        const dateStr = yearDates[String(year)] || yearDates[String(year + 1)];
+        if (dateStr) date = new Date(dateStr + "T00:00:00");
+      } catch {}
+    }
+
+    if (!date && h.dateMonth && h.dateDay) {
+      date = new Date(year, h.dateMonth - 1, h.dateDay);
+      if (date < now) date = new Date(year + 1, h.dateMonth - 1, h.dateDay);
+    }
+
+    if (date && date > now) {
+      const daysUntil = Math.ceil((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+      if (!closest || daysUntil < closest.daysUntil) {
+        closest = { name: h.name, slug: h.slug, date, daysUntil };
+      }
+    }
+  }
+
+  return closest;
+}
+
+function getUpcomingHolidays() {
+  const db = getDb();
+  const now = new Date();
+  const year = now.getFullYear();
+
+  const allHolidays = db
+    .select()
+    .from(holidays)
+    .where(eq(holidays.isPublicHoliday, 1))
+    .all();
+
+  const upcoming: { name: string; slug: string; date: Date }[] = [];
+
+  for (const h of allHolidays) {
+    let date: Date | null = null;
+
+    if (h.yearDates) {
+      try {
+        const yearDates = JSON.parse(h.yearDates) as Record<string, string>;
+        const dateStr = yearDates[String(year)] || yearDates[String(year + 1)];
+        if (dateStr) date = new Date(dateStr + "T00:00:00");
+      } catch {}
+    }
+
+    if (!date && h.dateMonth && h.dateDay) {
+      date = new Date(year, h.dateMonth - 1, h.dateDay);
+      if (date < now) date = new Date(year + 1, h.dateMonth - 1, h.dateDay);
+    }
+
+    if (date && date >= now) {
+      upcoming.push({ name: h.name, slug: h.slug, date });
+    }
+  }
+
+  upcoming.sort((a, b) => a.date.getTime() - b.date.getTime());
+  return upcoming.slice(0, 3);
+}
 
 export default async function Home() {
   const today = getTodayInLatvia();
@@ -44,6 +128,16 @@ export default async function Home() {
     (entry) => entry.month === todayMonth && entry.day === todayDay
   );
   const names = todayNameDays?.names || [];
+
+  // Get tomorrow's name days
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowMonth = tomorrow.getMonth() + 1;
+  const tomorrowDay = tomorrow.getDate();
+  const tomorrowNameDays = (nameDaysData as NameDayEntry[]).find(
+    (entry) => entry.month === tomorrowMonth && entry.day === tomorrowDay
+  );
+  const tomorrowNames = tomorrowNameDays?.names || [];
 
   // Get databases articles
   const db = getDb();
@@ -63,6 +157,12 @@ export default async function Home() {
 
   // Get today's historical events
   const todayHistoricalEvents = historicalEvents.slice(0, 3);
+
+  // Get next holiday
+  const nextHoliday = getNextHoliday();
+
+  // Get upcoming holidays for tool card
+  const upcomingHolidays = getUpcomingHolidays();
 
   const formattedDate = `${weekday}, ${todayDay}. ${monthGenitive}`;
 
@@ -85,7 +185,7 @@ export default async function Home() {
                   <Link
                     key={name}
                     href={`/varda-dienas/${name.toLowerCase()}`}
-                    className="name-highlight font-heading text-4xl sm:text-6xl lg:text-7xl font-bold text-primary hover:text-primary-light transition-colors"
+                    className="group name-highlight font-heading text-4xl sm:text-6xl lg:text-7xl font-bold text-primary hover:text-primary-light transition-colors"
                   >
                     {name}
                   </Link>
@@ -93,7 +193,7 @@ export default async function Home() {
               </div>
               <div className="flex flex-wrap items-center gap-3 mb-6">
                 {names.map((name) => (
-                  <span key={name} className="inline-flex gap-1">
+                  <span key={name} className="inline-flex gap-1 opacity-100 md:opacity-0 md:hover:opacity-100 focus-within:opacity-100 transition-opacity">
                     <a
                       href={`https://t.me/share/url?url=&text=Daudz%20laimes%20v%C4%81rda%20dien%C4%81%2C%20${encodeURIComponent(name)}!`}
                       target="_blank"
@@ -124,63 +224,48 @@ export default async function Home() {
             </>
           )}
 
-          <Link
-            href="/varda-dienas"
-            className="inline-block text-sm font-medium text-primary hover:underline"
-          >
-            Vārda dienu kalendārs →
-          </Link>
+          {/* Tomorrow's names */}
+          {tomorrowNames.length > 0 && (
+            <div className="pt-4 border-t border-accent/15">
+              <p className="text-text-muted text-sm">
+                Rīt: <span className="text-text-secondary">{tomorrowNames.join(", ")}</span>
+              </p>
+            </div>
+          )}
+
+          {/* Holiday pill + Calendar link */}
+          <div className="flex flex-wrap items-center gap-3 text-sm mt-4">
+            {nextHoliday && (
+              <Link
+                href={`/svetku-dienas/${nextHoliday.slug}`}
+                className="inline-flex items-center gap-2 bg-primary/5 hover:bg-primary/10 border border-primary/10 rounded-full px-4 py-2 transition-colors"
+              >
+                <span className="text-accent-dark font-semibold">{nextHoliday.name}</span>
+                <span className="text-text-muted">pēc {nextHoliday.daysUntil} d.</span>
+              </Link>
+            )}
+            <Link
+              href="/varda-dienas"
+              className="inline-flex items-center gap-1.5 bg-primary/5 hover:bg-primary/10 border border-primary/10 rounded-full px-4 py-2 transition-colors text-primary"
+            >
+              Vārda dienu kalendārs →
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* SECTION 2: Salary Calculator Preview */}
+      {/* SECTION 2: Interactive Tool Cards */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-6">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <Link
-            href="/algu-kalkulators"
-            className="bg-white rounded-lg shadow-md p-5 border border-border hover:shadow-lg hover:border-primary transition-all"
-          >
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-2xl">💰</span>
-              <h2 className="font-heading font-semibold text-lg">Algu kalkulators</h2>
-            </div>
-            <p className="text-text-secondary text-sm">
-              Aprēķini bruto un neto algu. Uzzini, cik daudz tu nopelnī pēc nodokļiem.
-            </p>
-            <p className="text-primary text-sm font-medium mt-3">Detalizēts kalkulators →</p>
-          </Link>
-
-          <Link
-            href="/svetku-dienas"
-            className="bg-white rounded-lg shadow-md p-5 border border-border hover:shadow-lg hover:border-primary transition-all"
-          >
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-2xl">🎉</span>
-              <h2 className="font-heading font-semibold text-lg">Svētku dienas</h2>
-            </div>
-            <p className="text-text-secondary text-sm">
-              Latvijas valsts svētku dienas, brīvdienas un ievērojamas dienas.
-            </p>
-            <p className="text-primary text-sm font-medium mt-3">Svētku saraksts →</p>
-          </Link>
-
-          <Link
-            href="/darba-dienu-kalendars"
-            className="bg-white rounded-lg shadow-md p-5 border border-border hover:shadow-lg hover:border-primary transition-all"
-          >
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-2xl">📅</span>
-              <h2 className="font-heading font-semibold text-lg">Darba dienu kalendārs</h2>
-            </div>
-            <p className="text-text-secondary text-sm">
-              Interaktīvs gada kalendārs ar svētku dienām un brīvdienām.
-            </p>
-            <p className="text-primary text-sm font-medium mt-3">Atvērt →</p>
-          </Link>
-        </div>
+        <HomepageToolCards upcomingHolidays={upcomingHolidays.map(h => ({
+          name: h.name,
+          slug: h.slug,
+          day: h.date.getDate(),
+          monthShort: LATVIAN_MONTHS_SHORT[h.date.getMonth()],
+          weekday: getLatvianWeekday(h.date.getDay()),
+        }))} />
       </section>
 
-      {/* SECTION 3: Year Progress */}
+      {/* SECTION 3: Year Progress + Mani vārdi */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-gradient-to-r from-primary/5 to-accent/5 border border-border rounded-xl p-5">
@@ -202,20 +287,29 @@ export default async function Home() {
               )}
               {names.length === 0 && "Šodien nav vārda dienu"}
             </p>
+            <p className="text-xs text-text-muted mt-2">
+              <Link href="/varda-dienas" className="text-primary hover:underline">Saglabā vārdus</Link>, lai redzētu personalizētu pārskatu.
+            </p>
           </div>
 
           <div className="bg-bg-secondary border border-border rounded-xl p-5">
+            <h3 className="font-heading font-semibold text-base mb-2">Mani vārdi</h3>
+            <p className="text-sm text-text-muted mb-3">
+              Saglabā ģimenes un draugu vārdus, lai nekad neaizmirstu vārda dienu.
+            </p>
             <div className="flex gap-2">
-              <span className="text-2xl">💾</span>
-              <div>
-                <h3 className="font-heading font-bold text-sm mb-1">Saglabā ģimenes un draugu vārdus</h3>
-                <p className="text-xs text-text-muted">
-                  Nekad neaizmirsti svarīgo cilvēku vārda dienas
-                </p>
-                <Link href="/varda-dienas" className="text-xs text-primary hover:underline mt-2 block">
-                  Skatīt saglabātos vārdus →
-                </Link>
-              </div>
+              <input
+                placeholder="Pievieno vārdu..."
+                className="flex-1 px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                type="text"
+                readOnly
+              />
+              <Link
+                href="/varda-dienas"
+                className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary-dark transition-colors"
+              >
+                +
+              </Link>
             </div>
           </div>
         </div>
@@ -238,7 +332,7 @@ export default async function Home() {
 
       {/* SECTION 5: Recent Articles */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 pb-12">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-5">
           <h2 className="font-heading text-2xl font-bold text-text">Aktualitātes</h2>
           <Link href="/aktualitates" className="text-sm font-medium text-primary hover:text-primary-light">
             Visi raksti →
@@ -246,18 +340,7 @@ export default async function Home() {
         </div>
 
         <div className="space-y-6">
-          {recentArticles.map((article, idx) => {
-            let sourceCount = 0;
-            if (article.sourceUrls) {
-              try {
-                const sources = JSON.parse(article.sourceUrls);
-                sourceCount = sources.filter((s: string | { url: string }) => {
-                  const url = typeof s === "string" ? s : s.url;
-                  return !url.includes("vertexaisearch") && !url.includes("google.com/search?q=time");
-                }).length;
-              } catch {}
-            }
-
+          {recentArticles.map((article) => {
             return (
               <article
                 key={article.id}
@@ -277,20 +360,21 @@ export default async function Home() {
                     <div className="md:col-span-2 aspect-[16/9] md:aspect-auto bg-gradient-to-br from-primary/10 to-primary/5" />
                   )}
 
-                  <div className="md:col-span-3 p-5 sm:p-6 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center gap-2 mb-3 flex-wrap">
-                        <TopicBadge topic={article.topic as ArticleTopic} />
-                        {article.publishedAt && (
-                          <span className="text-xs text-text-muted">{timeAgo(article.publishedAt)}</span>
-                        )}
-                        <span className="text-xs text-text-muted">&middot; {readingTime(article.content).text.replace(" read", "")}</span>
-                      </div>
-                      <h3 className="font-heading text-xl sm:text-2xl font-bold text-text group-hover:text-primary transition-colors mb-3" style={{ viewTransitionName: `article-title-${article.slug}` }}>
-                        {article.title}
-                      </h3>
-                      <p className="text-text-secondary leading-relaxed line-clamp-3">{article.excerpt}</p>
+                  <div className="md:col-span-3 p-5 sm:p-6">
+                    <div className="flex items-center gap-2 mb-3 flex-wrap">
+                      <TopicBadge topic={article.topic as ArticleTopic} />
+                      {article.publishedAt && (
+                        <span className="text-xs text-text-muted">{timeAgo(article.publishedAt)}</span>
+                      )}
+                      <span className="text-xs text-text-muted">&middot; {readingTime(article.content).text.replace(" read", "")}</span>
                     </div>
+                    <h3
+                      className="font-heading text-xl sm:text-2xl font-bold text-text group-hover:text-primary transition-colors mb-3"
+                      style={{ viewTransitionName: `article-title-${article.slug}` }}
+                    >
+                      {article.title}
+                    </h3>
+                    <p className="text-text-secondary leading-relaxed line-clamp-3">{article.excerpt}</p>
                   </div>
                 </Link>
               </article>
