@@ -137,6 +137,12 @@ input::placeholder {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
+/* Name Highlight - for large name displays */
+.name-highlight {
+  color: var(--color-primary);
+  word-wrap: break-word;
+}
+
 /* Badges */
 .badge {
   display: inline-block;
