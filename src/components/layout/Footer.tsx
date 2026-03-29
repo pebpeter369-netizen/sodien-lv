@@ -10,7 +10,7 @@ export function Footer() {
             <h3 className="font-heading text-xl font-bold mb-4">
               Tava<span className="text-accent">Diena</span>.lv
             </h3>
-            <p className="text-sm text-text-muted leading-relaxed">
+            <p className="text-sm leading-relaxed opacity-90">
               Aktuālā informācija Latvijā — vārda dienas, algu kalkulators,
               svētku dienas un aktuālākās ziņas.
             </p>
@@ -18,7 +18,7 @@ export function Footer() {
 
           <div>
             <h4 className="font-semibold mb-4">Rīki</h4>
-            <ul className="space-y-2 text-sm text-text-muted">
+            <ul className="space-y-2 text-sm opacity-90">
               <li>
                 <Link
                   href="/varda-dienas"
@@ -56,7 +56,7 @@ export function Footer() {
 
           <div>
             <h4 className="font-semibold mb-4">Informācija</h4>
-            <ul className="space-y-2 text-sm text-text-muted">
+            <ul className="space-y-2 text-sm opacity-90">
               <li>
                 <Link
                   href="/par-mums"
@@ -96,7 +96,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 mt-8 pt-8 text-center text-sm text-text-muted">
+        <div className="border-t border-white/10 mt-8 pt-8 text-center text-sm opacity-75">
           © {new Date().getFullYear()} TavaDiena.lv. Visas tiesības aizsargātas.
         </div>
       </div>
