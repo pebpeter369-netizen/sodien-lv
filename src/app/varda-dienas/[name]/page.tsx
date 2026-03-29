@@ -13,6 +13,8 @@ import {
   getLatvianMonthGenitive,
   getLatvianMonth,
 } from "@/lib/dates";
+
+export const dynamic = "force-dynamic";
 import { genitive } from "@/lib/latvian";
 import nameDaysData from "@/data/name-days.json";
 
