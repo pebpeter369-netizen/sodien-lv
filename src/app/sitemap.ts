@@ -5,6 +5,8 @@ import { eq } from "drizzle-orm";
 import nameDaysData from "@/data/name-days.json";
 import { TOPICS } from "@/types";
 
+export const dynamic = "force-dynamic";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.SITE_URL || "https://tavadiena.lv";
   const db = getDb();
