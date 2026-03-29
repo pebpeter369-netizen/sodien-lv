@@ -76,7 +76,8 @@ export function NewsletterSignup({ variant = "card" }: NewsletterSignupProps) {
             <button
               type="submit"
               disabled={state === "loading"}
-              className="px-4 py-2 bg-accent text-white font-semibold text-sm rounded-lg hover:bg-accent-dark transition-colors disabled:opacity-60 shrink-0"
+              className="px-4 py-2 text-white font-semibold text-sm rounded-lg hover:opacity-90 transition-opacity disabled:opacity-60 shrink-0"
+              style={{ backgroundColor: 'var(--color-diena)' }}
             >
               {state === "loading" ? "..." : "Pieteikties"}
             </button>

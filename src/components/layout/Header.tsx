@@ -28,7 +28,7 @@ export function Header() {
             href="/"
             className="font-heading text-2xl font-bold text-primary shrink-0"
           >
-            Tava<span className="text-accent">Diena</span>.lv
+            Tava<span className="diena-text">Diena</span>.lv
           </Link>
 
           {/* Desktop nav — left-aligned after logo */}

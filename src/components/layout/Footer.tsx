@@ -8,7 +8,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <h3 className="font-heading text-xl font-bold mb-4">
-              <span className="text-white">Tava</span><span className="text-accent">Diena</span><span className="text-white">.lv</span>
+              <span className="text-white">Tava</span><span className="diena-text">Diena</span><span className="text-white">.lv</span>
             </h3>
             <p className="text-sm leading-relaxed text-white opacity-90">
               Aktuālā informācija Latvijā — vārda dienas, algu kalkulators,

@@ -15,6 +15,8 @@
   --color-accent: #f1e1c5;
   --color-accent-light: #faf8f4;
   --color-accent-dark: #e8cfa8;
+  --color-diena: #d7a235;
+  --color-diena-line: #f1e1c5;
 
   --color-bg: #f8fafc;
   --color-bg-secondary: #FFFFFF;
@@ -150,6 +152,37 @@ input::placeholder {
 .name-highlight {
   color: var(--color-primary);
   word-wrap: break-word;
+  position: relative;
+  display: inline-block;
+}
+
+.name-highlight::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background-color: var(--color-diena-line);
+  z-index: -1;
+}
+
+/* Diena text with decorative underline */
+.diena-text {
+  color: var(--color-diena);
+  position: relative;
+  display: inline-block;
+}
+
+.diena-text::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--color-diena-line);
+  border-radius: 2px;
 }
 
 /* Badges */
