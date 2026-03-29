@@ -14,6 +14,7 @@ export default {
         accent: {
           DEFAULT: 'var(--color-accent)',
           light: 'var(--color-accent-light)',
+          dark: 'var(--color-accent-dark)',
         },
         bg: {
           DEFAULT: 'var(--color-bg)',

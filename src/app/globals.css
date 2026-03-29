@@ -10,8 +10,9 @@
   --color-primary: #2563EB;
   --color-primary-light: #3B82F6;
   --color-primary-dark: #1D4ED8;
-  --color-accent: #D97706;
-  --color-accent-light: #F59E0B;
+  --color-accent: #fbbf24;
+  --color-accent-light: #fcd34d;
+  --color-accent-dark: #f59e0b;
 
   --color-bg: #FFFFFF;
   --color-bg-secondary: #F9FAFB;
@@ -25,7 +26,7 @@
   --color-border-light: #F3F4F6;
 
   --color-success: #10B981;
-  --color-warning: #F59E0B;
+  --color-warning: #f59e0b;
   --color-error: #EF4444;
   --color-info: #3B82F6;
 }
