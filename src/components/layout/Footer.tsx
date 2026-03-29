@@ -7,8 +7,8 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="font-heading text-xl font-bold mb-4 text-white">
-              Tava<span className="text-accent">Diena</span>.lv
+            <h3 className="font-heading text-xl font-bold mb-4">
+              <span className="text-white">Tava</span><span className="text-accent">Diena</span><span className="text-white">.lv</span>
             </h3>
             <p className="text-sm leading-relaxed text-white opacity-90">
               Aktuālā informācija Latvijā — vārda dienas, algu kalkulators,
@@ -22,7 +22,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/varda-dienas"
-                  className="hover:text-accent transition-colors"
+                  className="text-white hover:text-accent transition-colors"
                 >
                   Vārda dienu kalendārs
                 </Link>
@@ -30,7 +30,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/algu-kalkulators"
-                  className="hover:text-accent transition-colors"
+                  className="text-white hover:text-accent transition-colors"
                 >
                   Algu kalkulators
                 </Link>
@@ -38,7 +38,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/svetku-dienas"
-                  className="hover:text-accent transition-colors"
+                  className="text-white hover:text-accent transition-colors"
                 >
                   Svētku dienas
                 </Link>
@@ -46,7 +46,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/aktualitates"
-                  className="hover:text-accent transition-colors"
+                  className="text-white hover:text-accent transition-colors"
                 >
                   Aktualitātes
                 </Link>
@@ -60,7 +60,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/par-mums"
-                  className="hover:text-accent transition-colors"
+                  className="text-white hover:text-accent transition-colors"
                 >
                   Par mums
                 </Link>
@@ -68,7 +68,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/privatuma-politika"
-                  className="hover:text-accent transition-colors"
+                  className="text-white hover:text-accent transition-colors"
                 >
                   Privātuma politika
                 </Link>
@@ -76,7 +76,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/jautajumi"
-                  className="hover:text-accent transition-colors"
+                  className="text-white hover:text-accent transition-colors"
                 >
                   Biežāk uzdotie jautājumi
                 </Link>
@@ -84,7 +84,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/sitemap.xml"
-                  className="hover:text-accent transition-colors"
+                  className="text-white hover:text-accent transition-colors"
                 >
                   Lapas karte
                 </Link>
