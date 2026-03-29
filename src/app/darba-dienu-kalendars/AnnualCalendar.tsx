@@ -339,7 +339,7 @@ export default function AnnualCalendar({
         <div className="flex items-center gap-3">
           <button
             onClick={() => setSelectedYear((y) => y - 1)}
-            className="px-3 py-1.5 rounded-lg border border-gray-300 bg-white hover:bg-surface-raised text-sm font-medium transition-colors"
+            className="px-3 py-1.5 rounded-lg border border-border bg-white hover:bg-surface-raised text-sm font-medium transition-colors"
             aria-label="Iepriekšējais gads"
           >
             ←
@@ -349,7 +349,7 @@ export default function AnnualCalendar({
           </h2>
           <button
             onClick={() => setSelectedYear((y) => y + 1)}
-            className="px-3 py-1.5 rounded-lg border border-gray-300 bg-white hover:bg-surface-raised text-sm font-medium transition-colors"
+            className="px-3 py-1.5 rounded-lg border border-border bg-white hover:bg-surface-raised text-sm font-medium transition-colors"
             aria-label="Nākamais gads"
           >
             →
@@ -405,7 +405,7 @@ export default function AnnualCalendar({
           Svētku diena
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="inline-block w-3 h-3 rounded bg-gray-200" />{" "}
+          <span className="inline-block w-3 h-3 rounded bg-surface-raised border border-border" />{" "}
           Brīvdiena
         </span>
         {hasWorkCalendarData && (

@@ -68,7 +68,7 @@ export default async function Home() {
   return (
     <main className="min-h-screen">
       {/* SECTION 1: Name Days Highlight */}
-      <section className="bg-[#faf8f3] dark:bg-bg-secondary border-b border-accent/10 dark:border-accent/20">
+      <section className="bg-accent-light border-b border-accent/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
           <p className="text-text-muted text-sm tracking-wide uppercase mb-4">
             {formattedDate}
@@ -105,7 +105,7 @@ export default async function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Link
             href="/algu-kalkulators"
-            className="bg-white dark:bg-bg-secondary rounded-lg shadow-md p-5 border border-border hover:shadow-lg hover:border-primary transition-all"
+            className="bg-white rounded-lg shadow-md p-5 border border-border hover:shadow-lg hover:border-primary transition-all"
           >
             <div className="flex items-center gap-2 mb-3">
               <span className="text-2xl">💰</span>
@@ -119,7 +119,7 @@ export default async function Home() {
 
           <Link
             href="/svetku-dienas"
-            className="bg-white dark:bg-bg-secondary rounded-lg shadow-md p-5 border border-border hover:shadow-lg hover:border-primary transition-all"
+            className="bg-white rounded-lg shadow-md p-5 border border-border hover:shadow-lg hover:border-primary transition-all"
           >
             <div className="flex items-center gap-2 mb-3">
               <span className="text-2xl">🎉</span>
@@ -133,7 +133,7 @@ export default async function Home() {
 
           <Link
             href="/darba-dienu-kalendars"
-            className="bg-white dark:bg-bg-secondary rounded-lg shadow-md p-5 border border-border hover:shadow-lg hover:border-primary transition-all"
+            className="bg-white rounded-lg shadow-md p-5 border border-border hover:shadow-lg hover:border-primary transition-all"
           >
             <div className="flex items-center gap-2 mb-3">
               <span className="text-2xl">📅</span>
@@ -150,7 +150,7 @@ export default async function Home() {
       {/* SECTION 3: Year Progress */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-gradient-to-r from-primary/5 to-accent/5 dark:from-primary/10 dark:to-accent/10 border border-border rounded-xl p-5">
+          <div className="bg-gradient-to-r from-primary/5 to-accent/5 border border-border rounded-xl p-5">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-heading font-bold text-base">{formattedDate}</h3>
               <span className="text-xs text-text-muted">{yearProgress}% no gada</span>
@@ -171,7 +171,7 @@ export default async function Home() {
             </p>
           </div>
 
-          <div className="bg-bg-secondary dark:bg-bg-secondary border border-border rounded-xl p-5">
+          <div className="bg-bg-secondary border border-border rounded-xl p-5">
             <div className="flex gap-2">
               <span className="text-2xl">💾</span>
               <div>
@@ -190,7 +190,7 @@ export default async function Home() {
 
       {/* SECTION 4: Today in History */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-4">
-        <div className="border border-border rounded-xl p-5 bg-bg-secondary dark:bg-bg-secondary">
+        <div className="border border-border rounded-xl p-5 bg-bg-secondary">
           <h3 className="font-heading font-bold text-base mb-3">Šodien vēsturē</h3>
           <ul className="space-y-2.5">
             {todayHistoricalEvents.map((event) => (
@@ -228,11 +228,11 @@ export default async function Home() {
             return (
               <article
                 key={article.id}
-                className="group border border-border rounded-lg overflow-hidden hover:shadow-lg transition-all bg-bg-secondary dark:bg-bg-secondary"
+                className="group border border-border rounded-lg overflow-hidden hover:shadow-lg transition-all bg-bg-secondary"
               >
                 <Link href={`/aktualitates/${article.slug}`} className="block md:grid md:grid-cols-5 gap-0">
                   {article.thumbnailUrl ? (
-                    <div className="md:col-span-2 aspect-[16/9] md:aspect-auto relative overflow-hidden bg-gradient-to-br from-primary/10 dark:from-primary/20 to-primary/5 dark:to-primary/10">
+                    <div className="md:col-span-2 aspect-[16/9] md:aspect-auto relative overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5">
                       <Image
                         src={article.thumbnailUrl}
                         alt={article.title}
@@ -241,7 +241,7 @@ export default async function Home() {
                       />
                     </div>
                   ) : (
-                    <div className="md:col-span-2 aspect-[16/9] md:aspect-auto bg-gradient-to-br from-primary/10 dark:from-primary/20 to-primary/5 dark:to-primary/10" />
+                    <div className="md:col-span-2 aspect-[16/9] md:aspect-auto bg-gradient-to-br from-primary/10 to-primary/5" />
                   )}
 
                   <div className="md:col-span-3 p-4 sm:p-5 flex flex-col justify-between">
@@ -279,7 +279,7 @@ export default async function Home() {
 
       {/* SECTION 6: Newsletter Signup */}
       <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-8">
-        <div className="bg-white dark:bg-bg-secondary border border-border rounded-xl p-6 sm:p-8 shadow-sm">
+        <div className="bg-white border border-border rounded-xl p-6 sm:p-8 shadow-sm">
           <h2 className="font-heading text-xl sm:text-2xl font-bold text-text mb-2">
             Saņem ikdienas apskatu e-pastā
           </h2>
