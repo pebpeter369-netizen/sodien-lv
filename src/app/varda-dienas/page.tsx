@@ -63,7 +63,7 @@ export default function NameDaysPage() {
         </p>
 
         {today && (
-          <div className="bg-accent-light border border-accent/15 rounded-xl p-8 mb-4">
+          <div className="bg-[#faf8f3] border border-accent/15 rounded-xl p-8 mb-4">
             <p className="text-accent-dark text-sm font-medium mb-2">
               Šodien, {formatLatvianDate(new Date())}
             </p>

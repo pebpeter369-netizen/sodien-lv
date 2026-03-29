@@ -4,7 +4,7 @@ export default {
   content: [
     './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  // Light-only design - dark mode is not included
+  // Dark mode dropped intentionally
   theme: {
     extend: {
       colors: {

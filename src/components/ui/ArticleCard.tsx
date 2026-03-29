@@ -40,7 +40,7 @@ export function ArticleCard({
   const gradient = TOPIC_GRADIENTS[topic] || "from-gray-900 to-gray-700";
 
   return (
-    <article className="group border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow bg-white">
+    <article className="group border border-border rounded-xl overflow-hidden hover:shadow-lg transition-all bg-bg-secondary">
       <Link href={`/aktualitates/${slug}`} className="block">
         {/* Image / Gradient fallback */}
         <div className="relative aspect-[16/9] overflow-hidden">

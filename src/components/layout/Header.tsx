@@ -21,14 +21,14 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-bg-secondary border-b border-border">
+    <header className="sticky top-0 z-50 bg-[#faf8f3] border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center h-16 gap-8">
           <Link
             href="/"
             className="font-heading text-2xl font-bold text-primary shrink-0"
           >
-            Tava<span className="diena-text">Diena</span>.lv
+            Tava<span className="text-accent">Diena</span>.lv
           </Link>
 
           {/* Desktop nav — left-aligned after logo */}

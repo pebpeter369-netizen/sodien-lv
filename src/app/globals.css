@@ -4,35 +4,35 @@
 
 /*
  * Light-Only Design System
- * Dark mode is explicitly disabled (see tailwind.config.ts)
- * This is a professional, light-themed design with no dark variants
+ * Colors matching v16 design
  */
 :root {
-  /* Color System */
+  /* Color System - matching v16 */
   --color-primary: #1a365d;
-  --color-primary-light: #3B82F6;
-  --color-primary-dark: #1D4ED8;
-  --color-accent: #f1e1c5;
-  --color-accent-light: #faf8f4;
-  --color-accent-dark: #e8cfa8;
+  --color-primary-light: #2a4a7f;
+  --color-primary-dark: #0f2340;
+  --color-accent: #fbbf24;
+  --color-accent-light: #ecc94b;
+  --color-accent-dark: #b7791f;
   --color-diena: #d7a235;
   --color-diena-line: #f1e1c5;
 
-  --color-bg: #f8fafc;
-  --color-bg-secondary: #FFFFFF;
+  --color-bg: #f7fafc;
+  --color-bg-secondary: #ffffff;
   --color-bg-tertiary: #F3F4F6;
 
-  --color-text: #111827;
-  --color-text-secondary: #6B7280;
+  --color-text: #1a202c;
+  --color-text-secondary: #718096;
   --color-text-muted: #9CA3AF;
 
-  --color-border: #E5E7EB;
+  --color-border: #374151;
   --color-border-light: #F3F4F6;
 
   --color-success: #10B981;
   --color-warning: #f59e0b;
   --color-error: #EF4444;
   --color-info: #3B82F6;
+
 }
 
 /* Typography */
@@ -42,7 +42,7 @@ html {
 }
 
 body {
-  font-family: var(--font-inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif);
+  font-family: var(--font-body, "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif);
   background-color: var(--color-bg);
   color: var(--color-text);
   line-height: 1.6;
@@ -60,7 +60,7 @@ h3 { font-size: 1.25rem; font-weight: 600; }
 h4 { font-size: 1.125rem; font-weight: 600; }
 
 .font-heading {
-  font-family: var(--font-inter, inherit);
+  font-family: var(--font-heading, "Source Serif 4", Georgia, serif);
   font-weight: 700;
 }
 

@@ -1,15 +1,23 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Source_Sans_3, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { NotificationPrompt } from "@/components/ui/NotificationPrompt";
 
-const inter = Inter({
-  variable: "--font-inter",
+const sourceSans = Source_Sans_3({
+  variable: "--font-body",
   subsets: ["latin", "latin-ext"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
+  preload: true,
+});
+
+const sourceSerif = Source_Serif_4({
+  variable: "--font-heading",
+  subsets: ["latin", "latin-ext"],
+  weight: ["600", "700"],
   display: "swap",
   preload: true,
 });
@@ -68,7 +76,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} antialiased`}
+        className={`${sourceSans.variable} ${sourceSerif.variable} antialiased`}
       >
         <Header />
         <main className="min-h-screen pb-16 md:pb-0">{children}</main>
