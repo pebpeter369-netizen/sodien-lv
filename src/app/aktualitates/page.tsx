@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 };
 
 export const revalidate = 300;
+export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 18;
 

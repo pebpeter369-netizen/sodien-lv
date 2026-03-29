@@ -7,6 +7,7 @@ import workCalendarData from "@/data/work-calendar.json";
 import AnnualCalendar from "./AnnualCalendar";
 
 export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Darba dienu kalendārs 2026 — Svētku dienas un brīvdienas Latvijā",

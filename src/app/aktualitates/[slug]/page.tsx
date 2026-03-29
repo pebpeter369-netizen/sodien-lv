@@ -13,6 +13,8 @@ import { TOPIC_LABELS, type ArticleTopic } from "@/types";
 const baseUrl = process.env.SITE_URL || "https://tavadiena.lv";
 import readingTime from "reading-time";
 
+export const dynamic = "force-dynamic";
+
 type Props = {
   params: Promise<{ slug: string }>;
 };

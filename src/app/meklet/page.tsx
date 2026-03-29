@@ -13,6 +13,8 @@ export const metadata: Metadata = {
   description: "Meklēt vārda dienas, rakstus, svētkus un citu informāciju.",
 };
 
+export const dynamic = "force-dynamic";
+
 type Props = {
   searchParams: Promise<{ q?: string }>;
 };

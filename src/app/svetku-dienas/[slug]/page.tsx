@@ -8,6 +8,8 @@ import { HolidayCountdown } from "@/components/ui/HolidayCountdown";
 import { HolidayGuide } from "@/components/ui/HolidayGuide";
 import { getLatvianMonthGenitive, getLatvianWeekday } from "@/lib/dates";
 
+export const dynamic = "force-dynamic";
+
 type Props = {
   params: Promise<{ slug: string }>;
 };
