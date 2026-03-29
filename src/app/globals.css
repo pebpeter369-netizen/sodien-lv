@@ -9,14 +9,14 @@
  */
 :root {
   /* Color System */
-  --color-primary: #1F40AF;
+  --color-primary: #2596be;
   --color-primary-light: #3B82F6;
   --color-primary-dark: #1D4ED8;
-  --color-accent: #fbbf24;
-  --color-accent-light: #fcd34d;
-  --color-accent-dark: #f59e0b;
+  --color-accent: #d59e2e;
+  --color-accent-light: #f5deb3;
+  --color-accent-dark: #b8860b;
 
-  --color-bg: #faf8f3;
+  --color-bg: #f8fafc;
   --color-bg-secondary: #FFFFFF;
   --color-bg-tertiary: #F3F4F6;
 
