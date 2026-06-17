@@ -11,6 +11,9 @@ import nameDaysData from "@/data/name-days.json";
 export const metadata: Metadata = {
   title: "Meklēt | TavaDiena.lv",
   description: "Meklēt vārda dienas, rakstus, svētkus un citu informāciju.",
+  // Search results are thin/duplicate — keep them out of the index.
+  robots: { index: false, follow: true },
+  alternates: { canonical: "/meklet" },
 };
 
 export const dynamic = "force-dynamic";

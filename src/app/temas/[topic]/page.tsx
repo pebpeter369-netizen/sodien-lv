@@ -34,6 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description:
       description ||
       `Jaunākie raksti un aktualitātes par tēmu: ${label}. Izskaidrojošie raksti latviešu valodā.`,
+    alternates: { canonical: `/temas/${topic}` },
   };
 }
 

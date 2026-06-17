@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getDb } from "@/lib/db";
 import { articles, holidays } from "@/lib/schema";
@@ -14,6 +15,10 @@ import { HomepageToolCards } from "@/components/ui/HomepageToolCards";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 300;
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 interface NameDayEntry {
   month: number;
@@ -167,10 +172,14 @@ export default async function Home() {
   const formattedDate = `${weekday}, ${todayDay}. ${monthGenitive}`;
 
   return (
-    <main className="min-h-screen">
+    <div className="min-h-screen">
       {/* SECTION 1: Name Days Highlight */}
       <section className="bg-[#faf8f3] border-b border-accent/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+          <h1 className="sr-only">
+            TavaDiena.lv — vārda dienas, svētku dienas, algu kalkulators un
+            aktualitātes Latvijā
+          </h1>
           <p className="text-text-muted text-sm tracking-wide uppercase mb-4">
             {formattedDate}
           </p>
@@ -394,6 +403,6 @@ export default async function Home() {
       <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-8">
         <NewsletterSignup variant="card" />
       </section>
-    </main>
+    </div>
   );
 }

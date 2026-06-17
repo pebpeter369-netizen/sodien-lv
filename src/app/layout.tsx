@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { NotificationPrompt } from "@/components/ui/NotificationPrompt";
+import { SITE_URL as siteUrl } from "@/lib/brand";
 
 const sourceSans = Source_Sans_3({
   variable: "--font-body",
@@ -21,8 +22,6 @@ const sourceSerif = Source_Serif_4({
   display: "swap",
   preload: true,
 });
-
-const siteUrl = process.env.SITE_URL || "https://tavadiena.lv";
 
 export const viewport: Viewport = {
   width: "device-width",

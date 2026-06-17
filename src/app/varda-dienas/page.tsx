@@ -13,6 +13,7 @@ import nameDaysData from "@/data/name-days.json";
 const currentYear = new Date().getFullYear();
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/varda-dienas" },
   title: `Vārda dienu kalendārs ${currentYear} — Latvijas oficiālais saraksts`,
   description: `Latvijas vārda dienu kalendārs ${currentYear}. gadam. Uzzini šodienas un rītdienas vārda dienas, meklē pēc vārda un pārlūko visu gadu pa mēnešiem. Vairāk nekā 700 vārdu.`,
 };

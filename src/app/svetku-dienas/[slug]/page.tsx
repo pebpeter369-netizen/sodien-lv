@@ -28,6 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${holiday.name} — svētku diena Latvijā`,
     description: `Uzzini par ${holiday.name} — kad tā ir, tradīcijas un vēsture. ${holiday.isPublicHoliday ? "Valsts svētku diena (brīvdiena)." : "Ievērojama diena Latvijā."}`,
+    alternates: { canonical: `/svetku-dienas/${slug}` },
   };
 }
 

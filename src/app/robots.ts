@@ -1,14 +1,17 @@
 import { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/brand";
+
+// Dynamic so the output can never be baked to a stale domain at build time.
+export const dynamic = "force-dynamic";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.SITE_URL || "https://tavadiena.lv";
-
   return {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: "/api/",
+      disallow: ["/api/", "/meklet"],
     },
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   };
 }

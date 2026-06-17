@@ -8,6 +8,7 @@ import readingTime from "reading-time";
 import Link from "next/link";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/aktualitates" },
   title: "Aktualitātes — jaunākās tēmas Latvijā",
   description:
     "Aktuālākās tēmas un izskaidrojošie raksti par norisēm Latvijā. Politika, ekonomika, sabiedrība un vairāk.",

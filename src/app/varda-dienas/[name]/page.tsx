@@ -76,6 +76,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${genitive(entry.name)} vārda diena — ${dateStr}`,
     description: `${genitive(entry.name)} vārda diena ir ${dateStr}.${meaningSnippet} Uzzini vārda izcelsmi, nozīmi, popularitāti un tradīcijas Latvijā.`,
+    alternates: { canonical: `/varda-dienas/${entry.name.toLowerCase()}` },
     openGraph: {
       title: `${entry.name} — vārda diena ${dateStr}`,
       description: `Kad ir ${genitive(entry.name)} vārda diena? ${dateStr}. Vārda nozīme, izcelsme un Latvijas tradīcijas.`,

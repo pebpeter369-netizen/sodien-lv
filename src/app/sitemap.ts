@@ -4,11 +4,12 @@ import { articles, holidays } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 import nameDaysData from "@/data/name-days.json";
 import { TOPICS } from "@/types";
+import { SITE_URL } from "@/lib/brand";
 
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.SITE_URL || "https://tavadiena.lv";
+  const baseUrl = SITE_URL;
   const db = getDb();
 
   // Static pages
@@ -54,12 +55,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  // Name day pages
+  // Name day pages (dedupe by lowercased slug — multiple spellings collapse)
   const allNames = (
     nameDaysData as { month: number; day: number; names: string[] }[]
   ).flatMap((entry) => entry.names);
-  const namePages: MetadataRoute.Sitemap = allNames.map((name) => ({
-    url: `${baseUrl}/varda-dienas/${name.toLowerCase()}`,
+  const uniqueNameSlugs = Array.from(
+    new Set(allNames.map((name) => name.toLowerCase()))
+  );
+  const namePages: MetadataRoute.Sitemap = uniqueNameSlugs.map((slug) => ({
+    url: `${baseUrl}/varda-dienas/${slug}`,
     changeFrequency: "yearly" as const,
     priority: 0.5,
   }));

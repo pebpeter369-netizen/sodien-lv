@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/privatuma-politika" },
   title: "Privātuma politika",
   description: "TavaDiena.lv privātuma politika — kā mēs apstrādājam jūsu datus.",
 };

@@ -10,6 +10,7 @@ export const revalidate = 3600;
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/darba-dienu-kalendars" },
   title: "Darba dienu kalendārs 2026 — Svētku dienas un brīvdienas Latvijā",
   description:
     "Interaktīvs darba dienu kalendārs ar visām Latvijas svētku dienām, brīvdienām, pārceltajām darba dienām un darba stundu skaitu pa mēnešiem. Plāno atvaļinājumu un uzzini, kad ir garās brīvdienas.",
