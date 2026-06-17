@@ -39,6 +39,8 @@ interface Props {
   holidays: Record<string, HolidayInfo[]>; // "M-D" -> holidays
   nameDays: NameDayEntry[];
   workCalendar: WorkCalendarData | null; // null if year has no MK data
+  hideMonthlyTable?: boolean;
+  hideHolidaysList?: boolean;
 }
 
 const WEEKDAY_SHORT = ["P", "O", "T", "C", "Pk", "S", "Sv"];
@@ -144,6 +146,8 @@ export default function AnnualCalendar({
   holidays,
   nameDays,
   workCalendar,
+  hideMonthlyTable,
+  hideHolidaysList,
 }: Props) {
   const [selectedYear, setSelectedYear] = useState(year);
   const [tooltip, setTooltip] = useState<{
@@ -617,6 +621,7 @@ export default function AnnualCalendar({
       )}
 
       {/* Monthly breakdown table */}
+      {!hideMonthlyTable && (
       <div className="mt-8 overflow-x-auto">
         <h3 className="text-lg font-heading font-bold text-primary mb-3">
           Darba dienas un stundas pa mēnešiem
@@ -689,8 +694,10 @@ export default function AnnualCalendar({
           </tbody>
         </table>
       </div>
+      )}
 
       {/* Public holidays list */}
+      {!hideHolidaysList && (
       <div className="mt-8">
         <h3 className="text-lg font-heading font-bold text-primary mb-3">
           Svētku dienas {selectedYear}. gadā
@@ -735,6 +742,7 @@ export default function AnnualCalendar({
             })}
         </div>
       </div>
+      )}
 
       {/* Tooltip */}
       {tooltip && (

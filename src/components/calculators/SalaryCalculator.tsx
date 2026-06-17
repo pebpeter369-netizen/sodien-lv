@@ -25,18 +25,8 @@ function calculateGrossToNet(
   const employeeSocialContrib =
     grossMonthly * taxConfig.employeeSocialContribution;
 
-  // Non-taxable minimum calculation
-  const ntmConfig = taxConfig.nonTaxableMinimum;
-  let nonTaxableMinimum = 0;
-  if (grossMonthly <= ntmConfig.thresholdMonthly) {
-    nonTaxableMinimum = ntmConfig.maxMonthly;
-  } else {
-    nonTaxableMinimum = Math.max(
-      0,
-      ntmConfig.maxMonthly -
-        ntmConfig.coefficient * (grossMonthly - ntmConfig.thresholdMonthly)
-    );
-  }
+  // Non-taxable minimum (fixed since 2025, no longer differentiated)
+  const nonTaxableMinimum = taxConfig.nonTaxableMinimum.monthly;
 
   // Dependent relief
   const dependentRelief = dependents * taxConfig.dependentRelief.monthly;

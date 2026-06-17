@@ -7,16 +7,7 @@ import taxConfig from "@/data/tax-config.json";
 function quickGrossToNet(gross: number): number {
   const employeeSocial = gross * taxConfig.employeeSocialContribution;
 
-  const ntm = taxConfig.nonTaxableMinimum;
-  let nonTaxable = 0;
-  if (gross <= ntm.thresholdMonthly) {
-    nonTaxable = ntm.maxMonthly;
-  } else {
-    nonTaxable = Math.max(
-      0,
-      ntm.maxMonthly - ntm.coefficient * (gross - ntm.thresholdMonthly)
-    );
-  }
+  const nonTaxable = taxConfig.nonTaxableMinimum.monthly;
 
   const taxableIncome = Math.max(0, gross - employeeSocial - nonTaxable);
 

@@ -7,6 +7,7 @@ import taxConfig from "@/data/tax-config.json";
 const currentYear = taxConfig.year;
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/algu-kalkulators" },
   title: `Algu kalkulators ${currentYear} — Bruto Neto aprēķins Latvijā`,
   description: `Aprēķini savu neto algu Latvijā ${currentYear}. gadā. Bruto → neto un neto → bruto kalkulators ar aktuālajām nodokļu likmēm — IIN (25,5%, 33%), VSAOI (10,50%), neapliekamais minimums €550.`,
 };
@@ -30,8 +31,8 @@ export default function SalaryCalculatorPage() {
         Šis algu kalkulators aprēķina neto algu no bruto algas (vai
         apgriezti), izmantojot {currentYear}. gada aktuālās Latvijas nodokļu
         likmes. Kalkulators ņem vērā darbinieka VSAOI (10,50%), iedzīvotāju
-        ienākuma nodokli (progresīvā likme: 25,5% un 33%) un diferencēto
-        neapliekamo minimumu (līdz €550 mēnesī).
+        ienākuma nodokli (progresīvā likme: 25,5% un 33%) un neapliekamo
+        minimumu (€550 mēnesī).
       </p>
 
       <SalaryCalculator />
@@ -101,7 +102,7 @@ export default function SalaryCalculatorPage() {
               </tr>
               <tr>
                 <td className="px-4 py-3 text-text-secondary">
-                  Neapliekamais minimums (max)
+                  Neapliekamais minimums
                 </td>
                 <td className="px-4 py-3 font-semibold">€550 mēnesī</td>
               </tr>
@@ -189,19 +190,92 @@ export default function SalaryCalculatorPage() {
         </p>
       </section>
 
-      {/* Methodology — E-E-A-T trust signal */}
+      {/* Methodology + Sources — E-E-A-T trust signal */}
       <section className="mt-8 max-w-2xl mx-auto bg-bg-secondary border border-border rounded-xl p-6">
         <h3 className="font-heading font-semibold text-lg mb-2">
-          Mūsu metodoloģija
+          Aprēķinu metodoloģija un avoti
         </h3>
-        <p className="text-text-secondary text-sm leading-relaxed">
-          Šī kalkulatora nodokļu likmes iegūtas no Ministru kabineta
-          noteikumiem un VID (Valsts ieņēmumu dienesta) publicētajām
-          metodiskajām norādēm. IIN progresīvās likmes, VSAOI iemaksu likmes
-          un diferencētā neapliekamā minimuma formula atbilst {currentYear}. gada
-          Latvijas normatīvajiem aktiem. Algu sadalījuma dati pamatojas uz CSP
-          (Centrālās statistikas pārvaldes) publicēto statistiku. Kalkulatora
-          precizitāte tiek regulāri pārbaudīta pret VID piemēriem.
+        <p className="text-text-secondary text-sm leading-relaxed mb-4">
+          Kalkulatora nodokļu likmes atbilst {currentYear}. gada Latvijas
+          normatīvajiem aktiem. Aprēķini regulāri tiek salīdzināti ar VID
+          publicētajiem piemēriem un citiem atzītiem kalkulatoriem (Swedbank,
+          SEB), lai nodrošinātu precizitāti.
+        </p>
+        <h4 className="font-semibold text-sm mb-2">Izmantotie avoti:</h4>
+        <ul className="space-y-1.5 text-sm text-text-secondary">
+          <li className="flex gap-2">
+            <span className="shrink-0">1.</span>
+            <span>
+              <a
+                href="https://likumi.lv/ta/id/56880"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                Likums &ldquo;Par iedzīvotāju ienākuma nodokli&rdquo;
+              </a>{" "}
+              — IIN likmes, neapliekamais minimums, atvieglojumi
+            </span>
+          </li>
+          <li className="flex gap-2">
+            <span className="shrink-0">2.</span>
+            <span>
+              <a
+                href="https://likumi.lv/ta/id/26019"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                Likums &ldquo;Par valsts sociālo apdrošināšanu&rdquo;
+              </a>{" "}
+              — VSAOI likmes (darbinieka 10,50%, darba devēja 23,59%)
+            </span>
+          </li>
+          <li className="flex gap-2">
+            <span className="shrink-0">3.</span>
+            <span>
+              <a
+                href="https://www.vid.gov.lv/lv/iedzivotaju-ienakuma-nodoklis"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                VID — Iedzīvotāju ienākuma nodoklis
+              </a>{" "}
+              — metodiskie skaidrojumi un piemēri
+            </span>
+          </li>
+          <li className="flex gap-2">
+            <span className="shrink-0">4.</span>
+            <span>
+              <a
+                href="https://www.fm.gov.lv/lv/neapliekamais-minimums-un-nodokla-atvieglojumi-0"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                Finanšu ministrija — Neapliekamais minimums un atvieglojumi
+              </a>{" "}
+              — fiksētais NTM €550/mēn. kopš 2025. gada
+            </span>
+          </li>
+          <li className="flex gap-2">
+            <span className="shrink-0">5.</span>
+            <span>
+              <a
+                href="https://stat.gov.lv/lv/statistikas-temas/darbs-un-algas"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                CSP — Darba samaksas statistika
+              </a>{" "}
+              — algu sadalījuma dati
+            </span>
+          </li>
+        </ul>
+        <p className="text-xs text-text-muted mt-3">
+          Pēdējo reizi pārbaudīts: {taxConfig.lastUpdated}
         </p>
       </section>
 
@@ -224,7 +298,7 @@ export default function SalaryCalculatorPage() {
             <p className="text-text-secondary leading-relaxed">
               No bruto algas vispirms tiek atņemtas darbinieka valsts sociālās
               apdrošināšanas obligātās iemaksas (VSAOI) 10,50% apmērā. Tad
-              tiek piemērots diferencētais neapliekamais minimums un
+              tiek piemērots neapliekamais minimums (€550) un
               atvieglojumi par apgādājamajiem. No atlikušā apliekamā ienākuma
               tiek aprēķināts iedzīvotāju ienākuma nodoklis (IIN) pēc
               progresīvās likmes — 25,5% vai 33%. Neto alga ir summa, kas
@@ -250,10 +324,10 @@ export default function SalaryCalculatorPage() {
             </h3>
             <p className="text-text-secondary leading-relaxed">
               Neapliekamais minimums ir ienākumu daļa, no kuras netiek
-              aprēķināts iedzīvotāju ienākuma nodoklis. Latvijā tas ir
-              diferencēts — līdz €550 mēnesī zemāku ienākumu saņēmējiem un
-              pakāpeniski samazinās, pieaugot ienākumiem. Ja bruto alga pārsniedz
-              aptuveni €1 800 mēnesī, neapliekamais minimums kļūst nulle.
+              aprēķināts iedzīvotāju ienākuma nodoklis. Kopš 2025. gada
+              Latvijā tas ir fiksēts — €550 mēnesī, neatkarīgi no ienākumu
+              līmeņa. Lai to piemērotu, algas nodokļu grāmatiņai jābūt
+              iesniegtai darba devējam.
             </p>
           </div>
 
@@ -366,7 +440,7 @@ export default function SalaryCalculatorPage() {
                   name: "Kas ir neapliekamais minimums?",
                   acceptedAnswer: {
                     "@type": "Answer",
-                    text: "Neapliekamais minimums ir ienākumu daļa, no kuras netiek aprēķināts IIN. Tas ir līdz €550 mēnesī zemāku ienākumu saņēmējiem un samazinās, pieaugot ienākumiem.",
+                    text: "Neapliekamais minimums ir ienākumu daļa, no kuras netiek aprēķināts IIN. Kopš 2025. gada tas ir fiksēts — €550 mēnesī visiem darbiniekiem, kam iesniegta algas nodokļu grāmatiņa.",
                   },
                 },
                 {

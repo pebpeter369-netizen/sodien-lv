@@ -39,11 +39,13 @@ export function GreetingGenerator({
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState<number | null>(null);
   const [error, setError] = useState("");
+  const [failedCards, setFailedCards] = useState<Set<number>>(new Set());
 
   async function generate() {
     setLoading(true);
     setError("");
     setGreetings([]);
+    setFailedCards(new Set());
 
     try {
       const res = await fetch("/api/greeting", {
@@ -181,24 +183,46 @@ export function GreetingGenerator({
       {greetings.length > 0 && (
         <div className="mt-5 space-y-3">
           {greetings.map((greeting, i) => {
-            const cardUrl = `/api/greeting-card?name=${encodeURIComponent(name)}&message=${encodeURIComponent(greeting)}&theme=${["classic", "warm", "spring", "elegant", "sunset"][i % 5]}`;
+            const themes = ["classic", "warm", "spring", "elegant", "sunset"] as const;
+            const theme = themes[i % 5];
+            // Truncate message for URL to avoid exceeding browser limits
+            const truncatedMessage = greeting.length > 200 ? greeting.slice(0, 197) + "..." : greeting;
+            const cardUrl = `/api/greeting-card?name=${encodeURIComponent(name)}&message=${encodeURIComponent(truncatedMessage)}&theme=${theme}`;
+            const cardFailed = failedCards.has(i);
 
             return (
               <div key={i} className="border border-border rounded-lg overflow-hidden bg-white">
                 {/* Visual card preview */}
-                <a
-                  href={cardUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block"
-                >
-                  <img
-                    src={cardUrl}
-                    alt={`Apsveikums ${name}`}
-                    className="w-full aspect-[1200/630] object-cover"
-                    loading="lazy"
-                  />
-                </a>
+                {cardFailed ? (
+                  <div
+                    className="w-full aspect-[1200/630] flex flex-col items-center justify-center p-6 text-center"
+                    style={{
+                      background: theme === "warm" ? "linear-gradient(135deg, #7c2d12, #b45309)"
+                        : theme === "spring" ? "linear-gradient(135deg, #065f46, #059669)"
+                        : theme === "elegant" ? "linear-gradient(135deg, #1e1b4b, #312e81)"
+                        : theme === "sunset" ? "linear-gradient(135deg, #831843, #be123c, #f97316)"
+                        : "linear-gradient(135deg, #1a365d, #0f2340)",
+                    }}
+                  >
+                    <p className="text-white/60 text-xs uppercase tracking-widest mb-2">Vārda diena</p>
+                    <p className="text-white text-2xl sm:text-3xl font-bold mb-3">{name}</p>
+                    <p className="text-white/70 text-sm sm:text-base leading-relaxed max-w-md">{greeting}</p>
+                  </div>
+                ) : (
+                  <a
+                    href={cardUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block"
+                  >
+                    <img
+                      src={cardUrl}
+                      alt={`Apsveikums ${name}`}
+                      className="w-full aspect-[1200/630] object-cover"
+                      onError={() => setFailedCards((prev) => new Set(prev).add(i))}
+                    />
+                  </a>
+                )}
 
                 {/* Actions */}
                 <div className="flex items-center justify-between p-3 border-t border-border">

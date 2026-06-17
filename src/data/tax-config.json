@@ -9,10 +9,9 @@
     { "upTo": null, "rate": 0.36 }
   ],
   "nonTaxableMinimum": {
-    "maxMonthly": 550,
-    "coefficient": 0.044,
-    "thresholdMonthly": 550,
-    "description": "MIN = max(0, 550 - 0.044 × (bruto_mēnesī - 550))"
+    "monthly": 550,
+    "annual": 6600,
+    "description": "Fiksēts neapliekamais minimums — 550 EUR/mēnesī (kopš 2025. gada nav diferencēts)"
   },
   "minimumWage": {
     "monthly": 780,

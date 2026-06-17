@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getDb } from "@/lib/db";
 import { holidays } from "@/lib/schema";
-import { eq } from "drizzle-orm";
 import {
   getLatvianWeekday,
   getLatvianMonthGenitive,
@@ -90,6 +89,7 @@ function resolveHolidayDate(
 }
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/svetku-dienas" },
   title: `Svētku dienas Latvijā ${currentYear} — brīvdienas, datumi un tradīcijas`,
   description: `Pilns Latvijas svētku dienu un brīvdienu saraksts ${currentYear}. gadam. Uzzini kad ir nākamie svētki, garās brīvdienas, ievērojamas dienas un latviskās tradīcijas katram svētkam.`,
 };
@@ -279,6 +279,8 @@ export default async function HolidaysPage() {
             nameDaysData as { month: number; day: number; names: string[] }[]
           }
           workCalendar={yearWorkCalendar}
+          hideMonthlyTable
+          hideHolidaysList
         />
       </section>
 
@@ -347,6 +349,12 @@ export default async function HolidaysPage() {
       <section className="mt-8 max-w-3xl mx-auto border border-border rounded-xl p-6 bg-bg-secondary">
         <h3 className="font-semibold text-text mb-3">Noderīgi rīki</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <Link
+            href="/darba-dienu-kalendars"
+            className="text-sm text-primary hover:underline"
+          >
+            &#128197; Darba dienu kalendārs — darba dienas un stundas
+          </Link>
           <Link
             href="/algu-kalkulators"
             className="text-sm text-primary hover:underline"
