@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local sqlite db (real data lives on the Fly volume) + backups
+/data/*.db
+/data/*.db-*
+/backups/
