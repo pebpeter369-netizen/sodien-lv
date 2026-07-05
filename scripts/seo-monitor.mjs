@@ -16,7 +16,7 @@ import { createSign } from "node:crypto";
 import { homedir } from "node:os";
 
 const SITE = "https://tavadiena.lv";
-const GSC_PROPERTY = `${SITE}/`; // URL-prefix property as verified in GSC
+const GSC_PROPERTY = "sc-domain:tavadiena.lv"; // Domain property (per sites.list)
 const KEY_PATH =
   process.env.GSC_KEY || `${homedir()}/.config/tavadiena/gsc-sa.json`;
 const KEY_URLS = [
@@ -119,28 +119,31 @@ async function gscChecks() {
 
   // 3. Search analytics: last 28 full days, split into two 14-day halves for trend.
   const day = (offset) => new Date(Date.now() - offset * 86400e3).toISOString().slice(0, 10);
-  const query = async (startDate, endDate) =>
-    (
-      await (
-        await fetch(
-          `https://www.googleapis.com/webmasters/v3/sites/${prop}/searchAnalytics/query`,
-          { method: "POST", headers: auth, body: JSON.stringify({ startDate, endDate }) }
-        )
-      ).json()
-    ).rows?.[0] ?? { clicks: 0, impressions: 0 };
+  const query = async (startDate, endDate) => {
+    const res = await fetch(
+      `https://www.googleapis.com/webmasters/v3/sites/${prop}/searchAnalytics/query`,
+      { method: "POST", headers: auth, body: JSON.stringify({ startDate, endDate }) }
+    );
+    const body = await res.json();
+    if (!res.ok) throw new Error(`searchAnalytics ${res.status}: ${body.error?.message}`);
+    return body.rows?.[0] ?? { clicks: 0, impressions: 0 };
+  };
   const prev = await query(day(30), day(17));
   const last = await query(day(16), day(3));
 
   // 4. Index state of the key pages.
   const inspections = [];
   for (const url of KEY_URLS) {
-    const res = await (
-      await fetch("https://searchconsole.googleapis.com/v1/urlInspection/index:inspect", {
-        method: "POST",
-        headers: auth,
-        body: JSON.stringify({ inspectionUrl: url, siteUrl: GSC_PROPERTY }),
-      })
-    ).json();
+    const resp = await fetch("https://searchconsole.googleapis.com/v1/urlInspection/index:inspect", {
+      method: "POST",
+      headers: auth,
+      body: JSON.stringify({ inspectionUrl: url, siteUrl: GSC_PROPERTY }),
+    });
+    const res = await resp.json();
+    if (!resp.ok) {
+      inspections.push({ url, error: `${resp.status}: ${res.error?.message}` });
+      continue;
+    }
     const r = res.inspectionResult?.indexStatusResult ?? {};
     inspections.push({
       url,
