@@ -12,9 +12,9 @@ import {
   daysUntil,
   getLatvianMonthGenitive,
   getLatvianMonthLocative,
-  getLatvianMonth,
 } from "@/lib/dates";
 import { genitive } from "@/lib/latvian";
+import { daySlug } from "@/lib/nameDayDates";
 import { SITE_URL } from "@/lib/brand";
 import { OG_DEFAULTS, OG_DEFAULT_IMAGE, PUBLISHER_JSONLD } from "@/lib/seo";
 import nameDaysData from "@/data/name-days.json";
@@ -122,7 +122,6 @@ export default async function NameDayPage({ params }: Props) {
   const dateStr = `${entry.day}. ${getLatvianMonthGenitive(entry.month - 1)}`;
   const dateStrLocative = `${entry.day}. ${getLatvianMonthLocative(entry.month - 1)}`;
   const days = daysUntil(entry.month, entry.day);
-  const monthName = getLatvianMonth(entry.month - 1);
 
   // Get other names from the same month for cross-linking (exclude self and co-names)
   const sameMonthNames = (namesByMonth.get(entry.month) || [])
@@ -166,6 +165,14 @@ export default async function NameDayPage({ params }: Props) {
           <p className="text-lg font-medium text-text">
             Vārda diena: <span className="font-bold">{dateStrLocative}</span>
           </p>
+        </div>
+        <div className="mb-3">
+          <Link
+            href={`/varda-dienas/datums/${daySlug(entry.day, entry.month - 1)}`}
+            className="text-sm font-medium text-primary hover:underline"
+          >
+            Visas šīs dienas vārda dienas →
+          </Link>
         </div>
         {popularityLabel && (
           <p className="text-sm text-text-muted">{popularityLabel} Latvijā</p>

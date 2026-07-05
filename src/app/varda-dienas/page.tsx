@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { NewsletterSignup } from "@/components/ui/NewsletterSignup";
-import { CompactShareButtons } from "@/components/ui/ShareButtons";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { CalendarSection } from "./CalendarSection";
 import {
   formatLatvianDate,
-  getLatvianMonthGenitive,
+  getLatvianMonth,
   getTodayInLatvia,
 } from "@/lib/dates";
+import { monthSlug, daySlug } from "@/lib/nameDayDates";
 import nameDaysData from "@/data/name-days.json";
 
 export const revalidate = 3600;
@@ -133,6 +133,35 @@ export default function NameDaysPage() {
       {/* Calendar section with grid/list toggle */}
       <section className="mt-8">
         <CalendarSection nameDaysData={nameDaysData as NameDayEntry[]} />
+      </section>
+
+      {/* Browse by month */}
+      <section className="mt-12 max-w-4xl mx-auto">
+        <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
+          <h2 className="font-heading text-2xl font-bold">
+            Pārlūko pa mēnešiem
+          </h2>
+          <Link
+            href={`/varda-dienas/datums/${daySlug(
+              todayDate.getDate(),
+              todayDate.getMonth()
+            )}`}
+            className="text-sm font-medium text-primary hover:underline"
+          >
+            Šodienas vārda dienas →
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          {Array.from({ length: 12 }, (_, i) => (
+            <Link
+              key={i}
+              href={`/varda-dienas/menesis/${monthSlug(i)}`}
+              className="border border-border rounded-xl px-4 py-3 text-center font-medium text-text hover:text-primary hover:border-primary/30 hover:bg-bg-secondary transition-colors"
+            >
+              {getLatvianMonth(i)}
+            </Link>
+          ))}
+        </div>
       </section>
 
       {/* FAQ Section */}

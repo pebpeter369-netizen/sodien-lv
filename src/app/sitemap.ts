@@ -3,6 +3,7 @@ import { getDb } from "@/lib/db";
 import { articles, holidays } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 import nameDaysData from "@/data/name-days.json";
+import { allMonthParams, allDayParams } from "@/lib/nameDayDates";
 import { TOPICS } from "@/types";
 import { SITE_URL } from "@/lib/brand";
 
@@ -100,11 +101,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
+  // Name day month pages (12) — /varda-dienas/menesis/{menesis}
+  const monthPages: MetadataRoute.Sitemap = allMonthParams().map(
+    ({ menesis }) => ({
+      url: `${baseUrl}/varda-dienas/menesis/${menesis}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })
+  );
+
+  // Name day date pages (366) — /varda-dienas/datums/{datums}
+  const dayPages: MetadataRoute.Sitemap = allDayParams().map(({ datums }) => ({
+    url: `${baseUrl}/varda-dienas/datums/${datums}`,
+    changeFrequency: "monthly" as const,
+    priority: 0.5,
+  }));
+
   return [
     ...staticPages,
     ...topicPages,
     ...namePages,
     ...holidayPages,
+    ...monthPages,
+    ...dayPages,
     ...articlePages,
   ];
 }
