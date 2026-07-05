@@ -1,0 +1,15 @@
+# node_modules must come from `npm ci` inside the Linux builder — copying the
+# macOS-built tree clobbers native binaries (better-sqlite3 → invalid ELF
+# header during build-time prerendering).
+node_modules
+.next
+.git
+backups
+Tavadiena-lv-v16-downloeded files
+*.xlsx
+*.log
+.DS_Store
+tsconfig.tsbuildinfo
+# SQLite sidecar files — the checkpointed .db alone is the build seed
+data/*.db-shm
+data/*.db-wal
