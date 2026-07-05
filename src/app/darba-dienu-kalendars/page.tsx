@@ -5,28 +5,19 @@ import { getEasterDate, getTodayInLatvia } from "@/lib/dates";
 import nameDaysData from "@/data/name-days.json";
 import workCalendarData from "@/data/work-calendar.json";
 import AnnualCalendar from "./AnnualCalendar";
+import { SITE_URL } from "@/lib/brand";
 
 export const revalidate = 3600;
-export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/darba-dienu-kalendars" },
-  title: "Darba dienu kalendārs 2026 — Svētku dienas un brīvdienas Latvijā",
-  description:
-    "Interaktīvs darba dienu kalendārs ar visām Latvijas svētku dienām, brīvdienām, pārceltajām darba dienām un darba stundu skaitu pa mēnešiem. Plāno atvaļinājumu un uzzini, kad ir garās brīvdienas.",
-  keywords: [
-    "darba dienu kalendārs",
-    "darba dienu kalendārs 2026",
-    "svētku dienas 2026",
-    "brīvdienas Latvijā",
-    "pārceltās darba dienas",
-    "darba dienas",
-    "darba stundas",
-    "atvaļinājuma plānošana",
-    "kalendārs 2026",
-    "pirmssvētku saīsinātās dienas",
-  ],
-};
+export function generateMetadata(): Metadata {
+  const year = getTodayInLatvia().getFullYear();
+  return {
+    alternates: { canonical: "/darba-dienu-kalendars" },
+    title: `Darba dienu kalendārs ${year} — Svētku dienas un brīvdienas Latvijā`,
+    description:
+      "Interaktīvs darba dienu kalendārs ar visām Latvijas svētku dienām, brīvdienām, pārceltajām darba dienām un darba stundu skaitu pa mēnešiem. Plāno atvaļinājumu un uzzini, kad ir garās brīvdienas.",
+  };
+}
 
 interface HolidayInfo {
   name: string;
@@ -144,8 +135,6 @@ export default function DarbadienuKalendarsPage() {
   const yearKey = String(currentYear) as keyof typeof workCalendarData;
   const yearWorkCalendar = workCalendarData[yearKey] ?? null;
 
-  const siteUrl = process.env.SITE_URL || "https://tavadiena.lv";
-
   return (
     <>
       <script
@@ -156,12 +145,12 @@ export default function DarbadienuKalendarsPage() {
             "@type": "WebPage",
             name: `Darba dienu kalendārs ${currentYear}`,
             description: `Interaktīvs ${currentYear}. gada darba dienu kalendārs ar svētku dienām, pārceltajām darba dienām un darba stundu skaitu Latvijā.`,
-            url: `${siteUrl}/darba-dienu-kalendars`,
+            url: `${SITE_URL}/darba-dienu-kalendars`,
             inLanguage: "lv",
             isPartOf: {
               "@type": "WebSite",
               name: "TavaDiena.lv",
-              url: siteUrl,
+              url: SITE_URL,
             },
           }),
         }}

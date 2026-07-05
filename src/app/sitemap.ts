@@ -26,6 +26,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/darba-dienu-kalendars`,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
       url: `${baseUrl}/svetku-dienas`,
       changeFrequency: "monthly",
       priority: 0.8,
@@ -48,11 +53,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // Topic pages
+  // Article pages (skip rows with empty/whitespace slugs)
+  const publishedArticles = (
+    await db.select().from(articles).where(eq(articles.status, "published"))
+  ).filter((a) => a.slug?.trim());
+  const articlePages: MetadataRoute.Sitemap = publishedArticles.map((a) => ({
+    url: `${baseUrl}/aktualitates/${a.slug}`,
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
+    lastModified: a.updatedAt ?? a.createdAt ?? undefined,
+  }));
+
+  // Topic pages — lastModified is the newest article date in each topic
+  const latestByTopic = new Map<string, Date>();
+  for (const a of publishedArticles) {
+    const date = a.updatedAt ?? a.createdAt;
+    if (!date) continue;
+    const current = latestByTopic.get(a.topic);
+    if (!current || date > current) latestByTopic.set(a.topic, date);
+  }
   const topicPages: MetadataRoute.Sitemap = TOPICS.map((t) => ({
     url: `${baseUrl}/temas/${t.slug}`,
     changeFrequency: "daily" as const,
     priority: 0.6,
+    lastModified: latestByTopic.get(t.slug),
   }));
 
   // Name day pages (dedupe by lowercased slug — multiple spellings collapse)
@@ -63,7 +87,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     new Set(allNames.map((name) => name.toLowerCase()))
   );
   const namePages: MetadataRoute.Sitemap = uniqueNameSlugs.map((slug) => ({
-    url: `${baseUrl}/varda-dienas/${slug}`,
+    url: `${baseUrl}/varda-dienas/${encodeURIComponent(slug)}`,
     changeFrequency: "yearly" as const,
     priority: 0.5,
   }));
@@ -74,18 +98,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}/svetku-dienas/${h.slug}`,
     changeFrequency: "yearly" as const,
     priority: 0.6,
-  }));
-
-  // Article pages
-  const publishedArticles = await db
-    .select()
-    .from(articles)
-    .where(eq(articles.status, "published"));
-  const articlePages: MetadataRoute.Sitemap = publishedArticles.map((a) => ({
-    url: `${baseUrl}/aktualitates/${a.slug}`,
-    changeFrequency: "weekly" as const,
-    priority: 0.7,
-    lastModified: a.updatedAt ?? a.createdAt ?? undefined,
   }));
 
   return [

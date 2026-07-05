@@ -10,6 +10,16 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/aktualitates/-1774120790106",
+        destination:
+          "/aktualitates/latvijas-partikas-drosiba-markejums-un-kvalitate",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

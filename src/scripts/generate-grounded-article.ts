@@ -4,6 +4,7 @@ import * as schema from "../lib/schema";
 import { GoogleGenAI } from "@google/genai";
 import { fetchUnsplashImage } from "../lib/unsplash";
 import { parseArticleJson } from "../lib/parse-article-json";
+import { slugify } from "../lib/latvian";
 import path from "path";
 
 const DB_PATH = path.join(process.cwd(), "data", "sodien.db");
@@ -154,13 +155,12 @@ Izmanto meklēšanas rezultātus, lai iekļautu jaunākos faktus, skaitļus un n
     }
   }
 
-  // Clean slug
-  const slug = article.suggested_slug
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9-]/g, "")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
+  // Clean slug — transliterate Latvian diacritics, lowercase, strip invalid chars
+  let slug = slugify(article.suggested_slug || "");
+  // Fall back to the title when the slug is empty or purely numeric/dashes
+  if (!slug.trim() || /^[-0-9]*$/.test(slug)) {
+    slug = slugify(article.title);
+  }
 
   // Check for duplicate slug
   const existingSlugs = new Set(
@@ -170,7 +170,10 @@ Izmanto meklēšanas rezultātus, lai iekļautu jaunākos faktus, skaitļus un n
       .all()
       .map((a) => a.slug)
   );
-  const finalSlug = existingSlugs.has(slug) ? `${slug}-${Date.now()}` : slug;
+  let finalSlug = slug;
+  for (let n = 2; existingSlugs.has(finalSlug); n++) {
+    finalSlug = `${slug}-${n}`;
+  }
 
   // Fetch thumbnail image from Unsplash
   const image = await fetchUnsplashImage(article.title, article.topic);

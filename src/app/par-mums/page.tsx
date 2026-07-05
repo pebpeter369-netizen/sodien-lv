@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/par-mums" },
-  title: "Par TavaDiena.lv — Latvijas ikdienas informācijas portāls",
+  title: { absolute: "Par TavaDiena.lv — Latvijas ikdienas informācijas portāls" },
   description:
     "Par TavaDiena.lv — Latvijas informācijas portāls ar vārda dienu kalendāru, algu kalkulatoru, svētku dienām un aktuālajām ziņām.",
 };

@@ -8,11 +8,43 @@ import { HolidayCountdown } from "@/components/ui/HolidayCountdown";
 import { HolidayGuide } from "@/components/ui/HolidayGuide";
 import { getLatvianMonthGenitive, getLatvianWeekday } from "@/lib/dates";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
+
+// Opt into on-demand ISR (no build-time prerender; cached per request).
+export async function generateStaticParams() {
+  return [];
+}
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+function getNextOccurrence(
+  holiday: {
+    dateMonth: number | null;
+    dateDay: number | null;
+    yearDates: string | null;
+  },
+  now: Date
+): Date | null {
+  const year = now.getFullYear();
+  for (const y of [year, year + 1]) {
+    let date: Date | null = null;
+    if (holiday.dateMonth && holiday.dateDay) {
+      date = new Date(y, holiday.dateMonth - 1, holiday.dateDay);
+    } else if (holiday.yearDates) {
+      try {
+        const parsed = JSON.parse(holiday.yearDates) as Record<string, string>;
+        const dateStr = parsed[String(y)];
+        if (dateStr) date = new Date(dateStr);
+      } catch {
+        // ignore malformed yearDates
+      }
+    }
+    if (date && date >= now) return date;
+  }
+  return null;
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -67,6 +99,19 @@ export default async function HolidayPage({ params }: Props) {
       });
     }
   }
+
+  // Nearest upcoming holidays for internal linking (excluding this one)
+  const now = new Date();
+  const allHolidays = await db.select().from(holidays);
+  const upcomingHolidays = allHolidays
+    .filter((h) => h.slug !== holiday.slug)
+    .map((h) => {
+      const date = getNextOccurrence(h, now);
+      return date ? { name: h.name, slug: h.slug, date } : null;
+    })
+    .filter((h): h is { name: string; slug: string; date: Date } => h !== null)
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
+    .slice(0, 4);
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
@@ -203,6 +248,26 @@ export default async function HolidayPage({ params }: Props) {
             &#127873; Vārda dienu kalendārs
           </Link>
         </div>
+
+        {upcomingHolidays.length > 0 && (
+          <div className="mt-5 pt-5 border-t border-border">
+            <h3 className="font-semibold text-text mb-3">
+              Tuvākās svētku dienas
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {upcomingHolidays.map((h) => (
+                <Link
+                  key={h.slug}
+                  href={`/svetku-dienas/${h.slug}`}
+                  className="text-sm text-primary hover:underline"
+                >
+                  {h.name} — {h.date.getDate()}.{" "}
+                  {getLatvianMonthGenitive(h.date.getMonth())}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Structured data */}

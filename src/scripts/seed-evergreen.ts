@@ -2,6 +2,7 @@ import Database from "better-sqlite3";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import * as schema from "../lib/schema";
 import { GoogleGenAI } from "@google/genai";
+import { slugify } from "../lib/latvian";
 import path from "path";
 
 const DB_PATH = path.join(process.cwd(), "data", "sodien.db");
@@ -189,17 +190,18 @@ Pārliecinies, ka raksts ir vismaz 800 vārdu garš un satur praktiskus piemēru
       const article = JSON.parse(jsonText);
       const now = new Date();
 
-      // Ensure slug doesn't have diacritics
-      const slug = (article.suggested_slug || keyword)
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-z0-9-]/g, "")
-        .replace(/-+/g, "-")
-        .replace(/^-|-$/g, "");
+      // Ensure slug is clean — transliterate diacritics, lowercase, strip invalid chars
+      let slug = slugify(article.suggested_slug || keyword);
+      // Fall back to the title when the slug is empty or purely numeric/dashes
+      if (!slug.trim() || /^[-0-9]*$/.test(slug)) {
+        slug = slugify(article.title) || keyword;
+      }
 
-      // Check for duplicate slug
-      const slugExists = existingSlugs.has(slug);
-      const finalSlug = slugExists ? `${slug}-${Date.now()}` : slug;
+      // Check for duplicate slug — dedupe with numeric suffix (-2, -3, …)
+      let finalSlug = slug;
+      for (let n = 2; existingSlugs.has(finalSlug); n++) {
+        finalSlug = `${slug}-${n}`;
+      }
 
       db.insert(schema.articles)
         .values({

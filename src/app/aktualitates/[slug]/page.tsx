@@ -7,13 +7,12 @@ import { articles } from "@/lib/schema";
 import { eq, desc, and, ne } from "drizzle-orm";
 import { TopicBadge } from "@/components/ui/TopicBadge";
 import { ArticleCard } from "@/components/ui/ArticleCard";
+import { ViewTracker } from "@/components/articles/ViewTracker";
 import { formatLatvianDateFull } from "@/lib/dates";
+import { SITE_URL } from "@/lib/brand";
+import { OG_DEFAULTS, OG_DEFAULT_IMAGE, PUBLISHER_JSONLD } from "@/lib/seo";
 import { TOPIC_LABELS, type ArticleTopic } from "@/types";
-
-const baseUrl = process.env.SITE_URL || "https://tavadiena.lv";
 import readingTime from "reading-time";
-
-export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -37,16 +36,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     alternates: { canonical: `/aktualitates/${article.slug}` },
     openGraph: {
+      ...OG_DEFAULTS,
       title: article.title,
       description,
+      url: `/aktualitates/${article.slug}`,
       type: "article",
       publishedTime: article.publishedAt?.toISOString(),
       modifiedTime: article.updatedAt?.toISOString(),
+      images: article.thumbnailUrl ? [article.thumbnailUrl] : [OG_DEFAULT_IMAGE],
     },
+    twitter: { card: "summary_large_image" },
   };
 }
 
 export const revalidate = 1800;
+
+// Opt into on-demand ISR (no build-time prerender; cached per request).
+export async function generateStaticParams() {
+  return [];
+}
 
 export default async function ArticlePage({ params }: Props) {
   const { slug } = await params;
@@ -60,12 +68,6 @@ export default async function ArticlePage({ params }: Props) {
   if (!article || article.status !== "published") {
     notFound();
   }
-
-  // Increment views
-  await db
-    .update(articles)
-    .set({ views: (article.views ?? 0) + 1 })
-    .where(eq(articles.id, article.id));
 
   const rt = readingTime(article.content);
 
@@ -83,9 +85,16 @@ export default async function ArticlePage({ params }: Props) {
     .orderBy(desc(articles.publishedAt))
     .limit(3);
 
+  // Some stored articles start with an <h1> that duplicates the template h1
+  // below — strip a leading <h1> and demote any remaining ones to <h2>.
+  const cleanedContent = article.content
+    .replace(/^\s*<h1[^>]*>[\s\S]*?<\/h1>\s*/i, "")
+    .replace(/<h1(\s[^>]*)?>/gi, "<h2>")
+    .replace(/<\/h1>/gi, "</h2>");
+
   // Insert ad after 2nd paragraph
-  const contentParts = article.content.split("</p>");
-  let contentWithAd = article.content;
+  const contentParts = cleanedContent.split("</p>");
+  let contentWithAd = cleanedContent;
   if (contentParts.length > 2) {
     contentWithAd =
       contentParts.slice(0, 2).join("</p>") +
@@ -95,6 +104,7 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+      <ViewTracker slug={article.slug} />
       {/* Breadcrumb */}
       <nav aria-label="Breadcrumb" className="mb-4 text-sm text-text-muted">
         <Link href="/" className="hover:text-primary">
@@ -250,29 +260,26 @@ export default async function ArticlePage({ params }: Props) {
               "@type": "Article",
               headline: article.title,
               description: article.metaDescription || article.excerpt,
+              image: article.thumbnailUrl ? [article.thumbnailUrl] : undefined,
               datePublished: article.publishedAt?.toISOString(),
               dateModified: article.updatedAt?.toISOString(),
-              url: `https://tavadiena.lv/aktualitates/${article.slug}`,
+              url: `${SITE_URL}/aktualitates/${article.slug}`,
               mainEntityOfPage: {
                 "@type": "WebPage",
-                "@id": `https://tavadiena.lv/aktualitates/${article.slug}`,
+                "@id": `${SITE_URL}/aktualitates/${article.slug}`,
               },
               articleSection: TOPIC_LABELS[article.topic as ArticleTopic],
               inLanguage: "lv",
               author: {
                 "@type": "Organization",
                 name: "TavaDiena.lv",
-                url: "https://tavadiena.lv",
+                url: SITE_URL,
               },
-              publisher: {
-                "@type": "Organization",
-                name: "TavaDiena.lv",
-                url: "https://tavadiena.lv",
-              },
+              publisher: PUBLISHER_JSONLD,
               reviewedBy: {
                 "@type": "Person",
                 name: "Pēteris",
-                url: "https://tavadiena.lv/par-mums",
+                url: `${SITE_URL}/par-mums`,
                 jobTitle: "Galvenais redaktors, TavaDiena.lv",
               },
             },
@@ -284,19 +291,19 @@ export default async function ArticlePage({ params }: Props) {
                   "@type": "ListItem",
                   position: 1,
                   name: "Sākums",
-                  item: "https://tavadiena.lv",
+                  item: SITE_URL,
                 },
                 {
                   "@type": "ListItem",
                   position: 2,
                   name: "Aktualitātes",
-                  item: "https://tavadiena.lv/aktualitates",
+                  item: `${SITE_URL}/aktualitates`,
                 },
                 {
                   "@type": "ListItem",
                   position: 3,
                   name: article.title,
-                  item: `https://tavadiena.lv/aktualitates/${article.slug}`,
+                  item: `${SITE_URL}/aktualitates/${article.slug}`,
                 },
               ],
             },

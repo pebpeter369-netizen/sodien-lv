@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { getDb } from "@/lib/db";
 import { nameDetails } from "@/lib/schema";
 import { eq } from "drizzle-orm";
@@ -11,12 +11,21 @@ import { NameProfile } from "@/components/ui/NameProfile";
 import {
   daysUntil,
   getLatvianMonthGenitive,
+  getLatvianMonthLocative,
   getLatvianMonth,
 } from "@/lib/dates";
-
-export const dynamic = "force-dynamic";
 import { genitive } from "@/lib/latvian";
+import { SITE_URL } from "@/lib/brand";
+import { OG_DEFAULTS, OG_DEFAULT_IMAGE, PUBLISHER_JSONLD } from "@/lib/seo";
 import nameDaysData from "@/data/name-days.json";
+
+export const revalidate = 3600;
+
+// Opt into on-demand ISR: with no build-time params, each of the ~1117 name
+// pages is rendered on first request and cached for `revalidate` seconds.
+export async function generateStaticParams() {
+  return [];
+}
 
 interface NameDayEntry {
   month: number;
@@ -47,12 +56,6 @@ type Props = {
   params: Promise<{ name: string }>;
 };
 
-export async function generateStaticParams() {
-  return allNames.map((entry) => ({
-    name: entry.name.toLowerCase(),
-  }));
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { name: nameParam } = await params;
   const entry = allNames.find(
@@ -68,18 +71,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     .where(eq(nameDetails.name, entry.name))
     .limit(1);
 
-  const dateStr = `${entry.day}. ${getLatvianMonthGenitive(entry.month - 1)}`;
+  const dateStrLocative = `${entry.day}. ${getLatvianMonthLocative(entry.month - 1)}`;
   const meaningSnippet = details?.meaning
     ? ` ${details.meaning.slice(0, 80)}.`
     : "";
 
   return {
-    title: `${genitive(entry.name)} vārda diena — ${dateStr}`,
-    description: `${genitive(entry.name)} vārda diena ir ${dateStr}.${meaningSnippet} Uzzini vārda izcelsmi, nozīmi, popularitāti un tradīcijas Latvijā.`,
+    title: `${genitive(entry.name)} vārda diena — ${dateStrLocative}`,
+    description: `${genitive(entry.name)} vārda diena ir ${dateStrLocative}.${meaningSnippet} Uzzini vārda izcelsmi, nozīmi, popularitāti un tradīcijas Latvijā.`,
     alternates: { canonical: `/varda-dienas/${entry.name.toLowerCase()}` },
     openGraph: {
-      title: `${entry.name} — vārda diena ${dateStr}`,
-      description: `Kad ir ${genitive(entry.name)} vārda diena? ${dateStr}. Vārda nozīme, izcelsme un Latvijas tradīcijas.`,
+      ...OG_DEFAULTS,
+      url: `/varda-dienas/${encodeURIComponent(entry.name.toLowerCase())}`,
+      title: `${entry.name} — vārda diena ${dateStrLocative}`,
+      description: `Kad ir ${genitive(entry.name)} vārda diena? ${dateStrLocative}. Vārda nozīme, izcelsme un Latvijas tradīcijas.`,
+      images: [OG_DEFAULT_IMAGE],
     },
   };
 }
@@ -95,6 +101,13 @@ export default async function NameDayPage({ params }: Props) {
     notFound();
   }
 
+  // Canonicalize case/encoding variants to a single indexable URL
+  if (decodedName !== entry.name.toLowerCase()) {
+    permanentRedirect(
+      `/varda-dienas/${encodeURIComponent(entry.name.toLowerCase())}`
+    );
+  }
+
   const db = getDb();
   const [details] = await db
     .select()
@@ -107,6 +120,7 @@ export default async function NameDayPage({ params }: Props) {
     : [];
 
   const dateStr = `${entry.day}. ${getLatvianMonthGenitive(entry.month - 1)}`;
+  const dateStrLocative = `${entry.day}. ${getLatvianMonthLocative(entry.month - 1)}`;
   const days = daysUntil(entry.month, entry.day);
   const monthName = getLatvianMonth(entry.month - 1);
 
@@ -124,7 +138,7 @@ export default async function NameDayPage({ params }: Props) {
           ? "Reti izplatīts vārds"
           : null;
 
-  const baseUrl = process.env.SITE_URL || "https://tavadiena.lv";
+  const baseUrl = SITE_URL;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
@@ -150,7 +164,7 @@ export default async function NameDayPage({ params }: Props) {
         </h1>
         <div className="bg-accent/10 rounded-xl px-6 py-4 inline-block mb-3">
           <p className="text-lg font-medium text-text">
-            Vārda diena: <span className="font-bold">{dateStr}</span>
+            Vārda diena: <span className="font-bold">{dateStrLocative}</span>
           </p>
         </div>
         {popularityLabel && (
@@ -259,7 +273,7 @@ export default async function NameDayPage({ params }: Props) {
         </h2>
         <div className="text-text-secondary leading-relaxed space-y-3">
           <p>
-            {genitive(entry.name)} vārda diena iekrīt {dateStr} —{" "}
+            {genitive(entry.name)} vārda diena iekrīt {dateStrLocative} —{" "}
             {entry.month >= 3 && entry.month <= 5
               ? "pavasara laikā, kad daba mostas un ziedēšana sākas. Šajā laikā vārda dienā bieži dāvina pavasara ziedus — tulpes, narcises vai pirmās pļavas puķes."
               : entry.month >= 6 && entry.month <= 8
@@ -299,10 +313,7 @@ export default async function NameDayPage({ params }: Props) {
       {sameMonthNames.length > 0 && (
         <section className="mb-8">
           <h2 className="font-heading text-xl font-bold mb-3">
-            Citas vārda dienas {getLatvianMonthGenitive(entry.month - 1).replace(
-              /^./,
-              (c) => c.toLowerCase()
-            )}
+            Citas vārda dienas {getLatvianMonthLocative(entry.month - 1)}
           </h2>
           <div className="flex flex-wrap gap-2">
             {sameMonthNames.map((name) => (
@@ -359,7 +370,7 @@ export default async function NameDayPage({ params }: Props) {
               Kad ir {genitive(entry.name)} vārda diena?
             </h3>
             <p className="text-text-secondary leading-relaxed">
-              {genitive(entry.name)} vārda diena ir {dateStr}. Latvijas vārda dienu
+              {genitive(entry.name)} vārda diena ir {dateStrLocative}. Latvijas vārda dienu
               kalendārā katram gada datumam ir piešķirti viens vai vairāki
               vārdi, un {entry.name} ir piešķirts tieši šim datumam.
             </p>
@@ -398,9 +409,9 @@ export default async function NameDayPage({ params }: Props) {
           __html: JSON.stringify([
             {
               "@context": "https://schema.org",
-              "@type": "Article",
-              headline: `${genitive(entry.name)} vārda diena — ${dateStr}`,
-              description: `${genitive(entry.name)} vārda diena ir ${dateStr}. ${details?.meaning || "Uzzini par vārda nozīmi un tradīcijām."}`,
+              "@type": "WebPage",
+              name: `${genitive(entry.name)} vārda diena — ${dateStrLocative}`,
+              description: `${genitive(entry.name)} vārda diena ir ${dateStrLocative}. ${details?.meaning || "Uzzini par vārda nozīmi un tradīcijām."}`,
               url: `${baseUrl}/varda-dienas/${entry.name.toLowerCase()}`,
               inLanguage: "lv",
               about: {
@@ -408,11 +419,7 @@ export default async function NameDayPage({ params }: Props) {
                 name: entry.name,
                 description: details?.origin || `Latviešu vārds ${entry.name}`,
               },
-              publisher: {
-                "@type": "Organization",
-                name: "TavaDiena.lv",
-                url: baseUrl,
-              },
+              publisher: PUBLISHER_JSONLD,
             },
             {
               "@context": "https://schema.org",
@@ -423,7 +430,7 @@ export default async function NameDayPage({ params }: Props) {
                   name: `Kad ir ${genitive(entry.name)} vārda diena?`,
                   acceptedAnswer: {
                     "@type": "Answer",
-                    text: `${genitive(entry.name)} vārda diena ir ${dateStr}.`,
+                    text: `${genitive(entry.name)} vārda diena ir ${dateStrLocative}.`,
                   },
                 },
                 ...(details?.origin

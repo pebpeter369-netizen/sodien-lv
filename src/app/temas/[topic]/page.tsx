@@ -12,8 +12,7 @@ import {
 import readingTime from "reading-time";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
-export const dynamic = "force-dynamic";
+import { SITE_URL } from "@/lib/brand";
 
 type Props = {
   params: Promise<{ topic: string }>;
@@ -177,6 +176,49 @@ export default async function TopicPage({ params }: Props) {
           </Link>
         </div>
       </section>
+
+      {/* Structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                {
+                  "@type": "ListItem",
+                  position: 1,
+                  name: "Sākums",
+                  item: SITE_URL,
+                },
+                {
+                  "@type": "ListItem",
+                  position: 2,
+                  name: "Aktualitātes",
+                  item: `${SITE_URL}/aktualitates`,
+                },
+                {
+                  "@type": "ListItem",
+                  position: 3,
+                  name: label,
+                  item: `${SITE_URL}/temas/${topic}`,
+                },
+              ],
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "CollectionPage",
+              name: `${label} — raksti un aktualitātes Latvijā`,
+              description:
+                description ||
+                `Jaunākie raksti un aktualitātes par tēmu: ${label}. Izskaidrojošie raksti latviešu valodā.`,
+              url: `${SITE_URL}/temas/${topic}`,
+              inLanguage: "lv",
+            },
+          ]),
+        }}
+      />
 
     </div>
   );

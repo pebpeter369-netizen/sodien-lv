@@ -7,16 +7,20 @@ import { CalendarSection } from "./CalendarSection";
 import {
   formatLatvianDate,
   getLatvianMonthGenitive,
+  getTodayInLatvia,
 } from "@/lib/dates";
 import nameDaysData from "@/data/name-days.json";
 
-const currentYear = new Date().getFullYear();
+export const revalidate = 3600;
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/varda-dienas" },
-  title: `Vārda dienu kalendārs ${currentYear} — Latvijas oficiālais saraksts`,
-  description: `Latvijas vārda dienu kalendārs ${currentYear}. gadam. Uzzini šodienas un rītdienas vārda dienas, meklē pēc vārda un pārlūko visu gadu pa mēnešiem. Vairāk nekā 700 vārdu.`,
-};
+export function generateMetadata(): Metadata {
+  const currentYear = getTodayInLatvia().getFullYear();
+  return {
+    alternates: { canonical: "/varda-dienas" },
+    title: `Vārda dienu kalendārs ${currentYear} — Latvijas oficiālais saraksts`,
+    description: `Latvijas vārda dienu kalendārs ${currentYear}. gadam. Uzzini šodienas un rītdienas vārda dienas, meklē pēc vārda un pārlūko visu gadu pa mēnešiem. Vairāk nekā 700 vārdu.`,
+  };
+}
 
 interface NameDayEntry {
   month: number;
@@ -25,7 +29,7 @@ interface NameDayEntry {
 }
 
 function getTodayAndTomorrow() {
-  const now = new Date();
+  const now = getTodayInLatvia();
   const todayMonth = now.getMonth() + 1;
   const todayDay = now.getDate();
 
@@ -45,6 +49,8 @@ function getTodayAndTomorrow() {
 }
 
 export default function NameDaysPage() {
+  const todayDate = getTodayInLatvia();
+  const currentYear = todayDate.getFullYear();
   const { today, tomorrow } = getTodayAndTomorrow();
 
   return (
@@ -66,7 +72,7 @@ export default function NameDaysPage() {
         {today && (
           <div className="bg-[#faf8f3] border border-accent/15 rounded-xl p-8 mb-4">
             <p className="text-accent-dark text-sm font-medium mb-2">
-              Šodien, {formatLatvianDate(new Date())}
+              Šodien, {formatLatvianDate(todayDate)}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 mb-5">
               {today.names.map((name) => (

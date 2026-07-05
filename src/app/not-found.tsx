@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Lapa nav atrasta | TavaDiena.lv",
+  title: "Lapa nav atrasta",
 };
 
 export default function NotFound() {

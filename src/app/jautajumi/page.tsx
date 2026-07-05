@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/jautajumi" },
-  title: "Biežāk uzdotie jautājumi — TavaDiena.lv",
+  title: "Biežāk uzdotie jautājumi",
   description:
     "Atbildes uz biežāk uzdotajiem jautājumiem par vārda dienām, algu aprēķinu, svētku dienām un nodokļiem Latvijā.",
 };

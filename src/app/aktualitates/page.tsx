@@ -7,15 +7,19 @@ import { TOPICS, type ArticleTopic } from "@/types";
 import readingTime from "reading-time";
 import Link from "next/link";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/aktualitates" },
-  title: "Aktualitātes — jaunākās tēmas Latvijā",
-  description:
-    "Aktuālākās tēmas un izskaidrojošie raksti par norisēm Latvijā. Politika, ekonomika, sabiedrība un vairāk.",
-};
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const n = Math.max(1, parseInt((await searchParams).lapa || "1") || 1);
+  return {
+    alternates: {
+      canonical: n <= 1 ? "/aktualitates" : `/aktualitates?lapa=${n}`,
+    },
+    title: "Aktualitātes — jaunākās tēmas Latvijā",
+    description:
+      "Aktuālākās tēmas un izskaidrojošie raksti par norisēm Latvijā. Politika, ekonomika, sabiedrība un vairāk.",
+  };
+}
 
 export const revalidate = 300;
-export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 18;
 

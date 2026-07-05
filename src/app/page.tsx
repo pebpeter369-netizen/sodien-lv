@@ -12,12 +12,20 @@ import { NewsletterSignup } from "@/components/ui/NewsletterSignup";
 import type { ArticleTopic } from "@/types";
 import { timeAgo } from "@/lib/dates";
 import { HomepageToolCards } from "@/components/ui/HomepageToolCards";
+import { OG_DEFAULTS, OG_DEFAULT_IMAGE } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
+  openGraph: {
+    ...OG_DEFAULTS,
+    url: "/",
+    title: "TavaDiena.lv — Aktuālā informācija Latvijā",
+    description:
+      "Vārda dienas, algu kalkulators, svētku dienas un aktuālākās ziņas Latvijā. Ērti rīki un informācija katrai dienai.",
+    images: [OG_DEFAULT_IMAGE],
+  },
 };
 
 interface NameDayEntry {

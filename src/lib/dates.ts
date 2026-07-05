@@ -16,6 +16,21 @@ const LATVIAN_MONTHS_GENITIVE = [
   "decembra",
 ];
 
+const LATVIAN_MONTHS_LOCATIVE = [
+  "janvārī",
+  "februārī",
+  "martā",
+  "aprīlī",
+  "maijā",
+  "jūnijā",
+  "jūlijā",
+  "augustā",
+  "septembrī",
+  "oktobrī",
+  "novembrī",
+  "decembrī",
+];
+
 const LATVIAN_MONTHS = [
   "Janvāris",
   "Februāris",
@@ -84,6 +99,10 @@ export function getLatvianMonth(monthIndex: number): string {
 
 export function getLatvianMonthGenitive(monthIndex: number): string {
   return LATVIAN_MONTHS_GENITIVE[monthIndex];
+}
+
+export function getLatvianMonthLocative(monthIndex: number): string {
+  return LATVIAN_MONTHS_LOCATIVE[monthIndex];
 }
 
 export function getLatvianWeekday(dayIndex: number): string {
